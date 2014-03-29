@@ -189,16 +189,41 @@ var myParty = [
     }
 ]
 
+var enemy = {"id": "5",
+        "name": "Charmeleon",
+        "level": 100,
+        "hp": 0,
+        "maxhp": 159};
+
 // Display stats for a pokemon
+// pokemon -> a standard pokemon hash
 var stats = function(pokemon) {
 
 }
 
 // Challenge screen
-var challenge = function() {
+var challenge = function(pokemon, enemy) {
+	var fightPokemon = myParty.filter(function (el) {
+	  	return el["name"] === pokemon;
+	});
+	challengeState = "Enemy " + enemy["name"] 
+		+ "\n (hp:" + enemy["hp"] + "/" + enemy["maxhp"] + ")\n"
+		+ "My " + fightPokemon["name"]
+		+ "\n (hp:" + fightPokemon["hp"] + "/" + fightPokemon["maxhp"] + ")\n" ;
 
+	var moves = fightPokemon["moves"];
+	for (var i=0; i<moves.length; i++) {
+		if (i === 0) {
+			challengeState += "> ";
+		} else {
+			challengeState += "  ";
+		}
+		challengeState += moves[i]["name"] + "\n";
+	}
+	simply.text({body: challengeState})
+
+	// TODO: implement scrolling
 }
-
 
 // Helper method that updates text to reflect scrolling
 // through a list of Pokemon in a trainer's party
@@ -243,14 +268,13 @@ var visibleBodyText = function(text, currLineNumber) {
 	return text.split('\n').slice(start,end).join('\n');
 }
 
-
 // Screen depicts list of Pokemon in your party
 // Scroll through list with up and down buttons, and long hold to select
 // param inBattle -> if inBattle is False, then trainer is not currently
 //						in a battle, and any pokemon can be selected.
 //					 if inBattle is True, then trainer is currently in a
 //						battle, and only usable Pokemon (>0 hp) can be selected.
-var party = function(inBattle = False) {
+var party = function(inBattle = False, enemy=[]) {
 	var liveParty = "";
 	var deadParty = "";
 	var livePartyCount = 0;
@@ -319,16 +343,22 @@ var party = function(inBattle = False) {
 	simply.on('longClick', function(e) {
 		var pokemon = bodyText.split('\n')[currentPointerLine];
 		if (inBattle) {
-			// make challenge request
-
 			// change to challenge screen
-			challenge();
+			challenge(pokemon,enemy);
 		}
 		else {
 			// change to stat screen of that pokemon
 			stats(pokemon);
 		}
 	});
+
+	simply.on('accelTap', function(e) {
+		// Test if a fist bump: on x-axis 
+		if (e.axis === 'x') {
+			// ajax(opt, success, failure); -> request challenge start TODO
+			// don't forget to set enemy to a hash that includes the enemy's info
+		}
+	})
 }
 
 
@@ -339,7 +369,7 @@ var menu = function() {
 	simply.vibe('short');
 	simply.on('longClick', function(e) {
 		simply.vibe('long');
-		// ajax(opt, success, failure); -> request game start
+		// ajax(opt, success, failure); -> request game start TODO
 	  	party();
 	});
 }
