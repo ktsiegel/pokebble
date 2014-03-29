@@ -16,8 +16,28 @@ type Trainer struct {
     battling bool
 }
 
-func makeTrainer(id string) *Trainer {
-    return trainers[id]
+func makeTrainer(id string, party []SimplePokemon) *Trainer {
+    actualParty := make([]Pokemon, len(party))
+    for idx, pokemon := range party {
+        name := base_pokemon[pokemon.Id].Name
+        actualParty[idx] = makePokemon(pokemon.Id, name, pokemon.Level)
+    }
+
+    trainer := Trainer{
+        name: id,
+        id: id,
+        pokemon: actualParty,
+        money: 0,
+
+        action: make(chan *ActionMessage),
+        outbox: make(chan []byte),
+        connections: make(map[*BattleConnection] bool),
+        battling: false,
+    }
+    trainers[id] = &trainer
+    go trainer.run()
+
+    return &trainer
 }
 
 func (t *Trainer) run() {

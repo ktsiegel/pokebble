@@ -14,6 +14,7 @@ type PendingBattle struct {
     Trainer_id string `json:"trainer"`
     Lat float64 `json:"lat"`
     Lng float64 `json:"lng"`
+    Party []SimplePokemon `json:"pokemon"`
 
     trainer *Trainer
     createdTime time.Time
@@ -30,6 +31,10 @@ type PendingBattles struct {
 type Battle struct {
     conn1 *BattleConnection
     conn2 *BattleConnection
+}
+
+func (pb *PendingBattle) initialize() {
+    pb.trainer = makeTrainer(pb.Trainer_id, pb.Party)
 }
 
 func (battle1 *PendingBattle) CloseTo(battle2 *PendingBattle) bool {
@@ -81,10 +86,12 @@ func (pbs *PendingBattles) run() {
                     if c.CloseTo(pb) {
                         log.Println("matched")
                         delete(pbs.data, pb)
+
                         battle := Battle{conn1: pb.conn, conn2: c.conn}
                         c.trainer.battling = true
                         pb.trainer.battling = true
-                        go battle.start(pb.Trainer_id, c.Trainer_id)
+                        go battle.start(pb.trainer, c.trainer)
+
                         matched = true
                         break
                     }
@@ -109,11 +116,8 @@ func (pbs *PendingBattles) run() {
     }
 }
 
-func (battle *Battle) start(trainer_id1 string, trainer_id2 string) {
-    log.Println("Battle starting between", trainer_id1, "and", trainer_id2)
-
-    trainer1 := makeTrainer(trainer_id1)
-    trainer2 := makeTrainer(trainer_id2)
+func (battle *Battle) start(trainer1 *Trainer, trainer2 *Trainer) {
+    log.Println("Battle starting between", trainer1.id, "and", trainer2.id)
 
     train1ToMove := rand.Float32() < 0.5
     lastAttackMsg := LastAttackMessage{}

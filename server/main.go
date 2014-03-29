@@ -23,9 +23,6 @@ var (
     base_pokemon = make(map[string] *BasePokemon)
 
     trainers = make(map[string] *Trainer)
-
-    jin = Trainer{}
-    edwin = Trainer{}
 )
 
 func parseFiles() {
@@ -70,37 +67,6 @@ func parseFiles() {
 
 func main() {
     parseFiles()
-    jin = Trainer{name: "Jin", id: "1", pokemon: []Pokemon{
-        makePokemon("151", "Mew", 100),
-        makePokemon("149", "Dragonite", 100),
-        makePokemon("145", "Zapdos", 100),
-        makePokemon("3", "Venusaur", 100),
-        makePokemon("6", "Blastoise", 100),
-        makePokemon("9", "Charizard", 100)},
-        action: make(chan *ActionMessage),
-        outbox: make(chan []byte),
-        connections: make(map[*BattleConnection] bool),
-        battling: false,
-    }
-    edwin = Trainer{name: "Edwin", id: "2", pokemon: []Pokemon{
-        makePokemon("4", "Charmander", 100),
-        makePokemon("42", "COOL GUY", 100),
-        makePokemon("88", "Sweet Bro", 100),
-        makePokemon("12", "Chocolate", 100),
-        makePokemon("55", "Google Glass", 100),
-        makePokemon("56", "Myo", 100),
-        makePokemon("150", "MISSINGNO", 100)},
-        action: make(chan *ActionMessage),
-        outbox: make(chan []byte),
-        connections: make(map[*BattleConnection] bool),
-        battling: false,
-    }
-
-    trainers["1"] = &jin
-    trainers["2"] = &edwin
-
-    go jin.run()
-    go edwin.run()
 
     go pendingBattles.run()
     http.HandleFunc("/battle", battleHandler)

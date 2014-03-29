@@ -27,15 +27,17 @@ func (bc *BattleConnection) reader() {
             actionMessage := ActionMessage{Attack: -1, Switch: -1}
             _ = json.Unmarshal(msg, &actionMessage)
             actionMessage.trainer = bc.trainer
-            bc.trainer.action <-&actionMessage
+            if actionMessage.Attack != -1 || actionMessage.Switch != -1 {
+                bc.trainer.action <-&actionMessage
+            }
         } else {
             battle := PendingBattle{createdTime: time.Now(), conn: bc}
             _ = json.Unmarshal(msg, &battle)
+            battle.initialize()
             pendingBattles.toAdd <- &battle
+            trainer := battle.trainer
 
-            trainer := trainers[battle.Trainer_id]
             bc.trainer = trainer
-            battle.trainer = trainer
             trainer.connections[bc] = true
         }
     }

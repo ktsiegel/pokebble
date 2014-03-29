@@ -17,6 +17,11 @@ type BasePokemon struct {
     Moves []string `json:"moves"`
 }
 
+type SimplePokemon struct {
+    Id string `json:"id"`
+    Level uint`json:"level"`
+}
+
 type Pokemon struct {
     name string
     base BasePokemon

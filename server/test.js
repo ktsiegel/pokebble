@@ -5,6 +5,24 @@ var trainer = hash.substring(1, hash.length);
 
 msg1 = {
     "trainer": trainer,
+    "pokemon": [
+        {
+            "id": "4",
+            "name": "Charmander",
+            "level": 100,
+            "hp": 159,
+            "maxhp": 159,
+            "moves": [
+                {
+                    "name": "Scratch",
+                    "pp": 20,
+                    "maxpp": 20,
+                    "power": 40,
+                    "type": "normal"
+                }
+            ]
+        }
+    ],
     "Lat": 42.3646,
     "Lng": -71.1028
 };
