@@ -222,7 +222,26 @@ var challenge = function(pokemon, enemy) {
 	}
 	simply.text({body: challengeState})
 
-	// TODO: implement scrolling
+	// scrolling
+	var currentPointerLine = 5;
+	simply.text({ body: visibleBodyText(bodyText, currentPointerLine, 1) });
+	simply.on('singleClick', function(e) {
+	  	if (e.button === 'up' && currentPointerLine > 5) {
+			currentPointerLine -= 1;
+	  	} else if (e.button === 'down' && currentPointerLine < 4 + moves.length) {
+	  		currentPointerLine += 1;
+	  	}
+	  	// Update body text
+	  	bodyText = partyScrollUpdate(bodyText, currentPointerLine);
+	  	simply.text({ body: visibleBodyText(bodyText, currentPointerLine, 1) });
+	});
+
+	// Select move
+	simply.on('longClick', function(e) {
+		var move = bodyText.split('\n')[currentPointerLine];
+		// make move via request TODO
+		// ajax(opt, success = popup menu saying that you made that move, failure);
+	});
 }
 
 // Helper method that updates text to reflect scrolling
@@ -248,7 +267,7 @@ var partyScrollUpdate = function(text, currLineNumber) {
 //
 // param text -> the entirety of the Pebble text
 // param currLineNumber -> the line that should be centered on the screen
-var visibleBodyText = function(text, currLineNumber) {
+var visibleBodyText = function(text, currLineNumber, offset=0) {
 	var maxLine = text.split('\n').length;
 
 	// Applicable if currLineNumber <= 3
@@ -257,12 +276,12 @@ var visibleBodyText = function(text, currLineNumber) {
 	var end = 7;
 
 	// Applicable if the 4th to last line is centered
-	if (currLineNumber >= maxLine - 4) {
-		start = maxLine - 7;
-		end = maxLine;
+	if (currLineNumber >= maxLine - 4 + offset) {
+		start = maxLine - 7 - offset;
+		end = maxLine - offset;
 	} else if (currLineNumber > 3) {
-		start = currLineNumber - 3;
-		end = currLineNumber + 4;
+		start = currLineNumber - 3 - offset;
+		end = currLineNumber + 4 - offset;
 	}
 
 	return text.split('\n').slice(start,end).join('\n');
