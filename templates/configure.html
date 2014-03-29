@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>My Title</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='cover.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='game.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+	<script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='configure.js') }}"></script>
+    
+    
+</head>
+
+<body>
+<div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="inner cover" style="font-family:Lucida Console">
+            <h1 class="cover-heading row row-pokeslots">
+                <div class='col-xs-2 pokebox'>
+                    <div class='pokeslot' id='pokeslot-1'></div>
+                </div>
+                <div class='col-xs-2 pokebox'>
+                    <div class='pokeslot' id='pokeslot-2'></div>
+                </div>
+                <div class='col-xs-2 pokebox'>
+                    <div class='pokeslot' id='pokeslot-3'></div>
+                </div>
+                <div class='col-xs-2 pokebox'>
+                    <div class='pokeslot' id='pokeslot-4'></div>
+                </div>
+                <div class='col-xs-2 pokebox'>
+                    <div class='pokeslot' id='pokeslot-5'></div>
+                </div>
+                <div class='col-xs-2 pokebox'>
+                    <div class='pokeslot' id='pokeslot-6'></div>
+                </div>
+            </h1>
+            <p class="lead">Select the Pokemon in your party.</p>
+            <p class="lead">
+              	<form role="form">
+              		<input type="pokemonName" class="form-control" id="pokemonSearch" placeholder="Pokemon name">
+				</form>		
+
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    
+
+</body>
+</html>
