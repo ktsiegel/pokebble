@@ -11,6 +11,10 @@ def game():
 def configure():
 	return render_template('configure.html')
 
+@app.route("/saved")
+def saved():
+	return render_template('saved.html')
+
 if __name__ == "__main__":
 	app.debug = True
 	app.run()
