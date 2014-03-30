@@ -294,7 +294,7 @@ var party = function(inBattle) {
   simply.off('longClick');
   simply.on('longClick', function(e) {
     var pokemon = 0;
-    var pokename = bodyText.split('\n')[currentPointerLine];
+    var pokename = bodyText.split('\n')[currentPointerLine].substring(2);
     console.log("looking for " + pokename);
     for(var i = 0; i < myParty.length; i++){
       if(myParty[i].name === pokename){
