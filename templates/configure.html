@@ -5,11 +5,236 @@
 	<title>My Title</title>
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bootstrap.min.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='cover.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='game.css') }}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 	<script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='configure.js') }}"></script>
+    <script>
+
+        var pokeslots = [];
+
+        var allPokemon = ["Bulbasaur",
+                "Ivysaur",
+                "Venusaur",
+                "Charmander",
+                "Charmeleon",
+                "Charizard",
+                "Squirtle",
+                "Wartortle",
+                "Blastoise",
+                "Caterpie",
+                "Metapod",
+                "Butterfree",
+                "Weedle",
+                "Kakuna",
+                "Beedrill",
+                "Pidgey",
+                "Pidgeotto",
+                "Pidgeot",
+                "Rattata",
+                "Raticate",
+                "Spearow",
+                "Fearow",
+                "Ekans",
+                "Arbok",
+                "Pikachu",
+                "Raichu",
+                "Sandshrew",
+                "Sandslash",
+                "Nidoran (f)",
+                "Nidorina",
+                "Nidoqueen",
+                "Nidoran (m)",
+                "Nidorino",
+                "Nidoking",
+                "Clefairy",
+                "Clefable",
+                "Vulpix",
+                "Ninetales",
+                "Jigglypuff",
+                "Wigglytuff",
+                "Zubat",
+                "Golbat",
+                "Oddish",
+                "Gloom",
+                "Vileplume",
+                "Paras",
+                "Parasect",
+                "Venonat",
+                "Venomoth",
+                "Diglett",
+                "Dugtrio",
+                "Meowth",
+                "Persian",
+                "Psyduck",
+                "Golduck",
+                "Mankey",
+                "Primeape",
+                "Growlith",
+                "Arcanine",
+                "Poliwag",
+                "Poliwhirl",
+                "Poliwrath",
+                "Abra",
+                "Kadabra",
+                "Alakazam",
+                "Machop",
+                "Machoke",
+                "Machamp",
+                "Bellsprout",
+                "Weepinbell",
+                "Victreebell",
+                "Tentacool",
+                "Tentacruel",
+                "Geodude",
+                "Graveler",
+                "Golem",
+                "Ponyta",
+                "Rapidash",
+                "Slowpoke",
+                "Slowbro",
+                "Magnemite",
+                "Magneton",
+                "Farfetch'd",
+                "Doduo",
+                "Dodrio",
+                "Seel",
+                "Dewgong",
+                "Grimer",
+                "Muk",
+                "Shellder",
+                "Cloyster",
+                "Gastly",
+                "Haunter",
+                "Gengar",
+                "Onix",
+                "Drowsee",
+                "Hypno",
+                "Krabby",
+                "Kingler",
+                "Voltorb",
+                "Electrode",
+                "Exeggute",
+                "Exeggutor",
+                "Cubone",
+                "Marowak",
+                "Hitmonlee",
+                "Hitmonchan",
+                "Lickitung",
+                "Koffing",
+                "Weezing",
+                "Rhyhorn",
+                "Rhydon",
+                "Chansey",
+                "Tangela",
+                "Kangaskhan",
+                "Horsea",
+                "Seadra",
+                "Goldeen",
+                "Seaking",
+                "Staryu",
+                "Starmie",
+                "Mr. Mime",
+                "Scyther",
+                "Jynx",
+                "Electabuzz",
+                "Magmar",
+                "Pinsir",
+                "Tauros",
+                "Magikarp",
+                "Gyarados",
+                "Lapras",
+                "Ditto",
+                "Eevee",
+                "Vaporeon",
+                "Jolteon",
+                "Flareon",
+                "Porygon",
+                "Omanyte",
+                "Omastar",
+                "Kabuto",
+                "Kabutops",
+                "Aerodactyl",
+                "Snorlax",
+                "Articuno",
+                "Zapdos",
+                "Moltres",
+                "Dratini",
+                "Dragonair",
+                "Dragonite",
+                "Mewtwo",
+                "Mew"];
+
+        $(document).ready($(function() {
+            $("#pokemonSearch").autocomplete({
+                source: allPokemon
+            });
+
+            $("#pokemonSubmit").click(function( ) {
+                if (pokeslots.length < 6) {
+                    var pokemon = $('#pokemonSearch').val();
+                    if ($.inArray(pokemon, allPokemon)) {
+                        pokeslots.push(pokemon);
+                        var pokeslot = "#pokeslot-" + pokeslots.length.toString();
+                        $(pokeslot).text(pokemon);
+                    }
+                }
+                $('#pokemonSearch').val("");
+            });
+
+            $("#partySubmit").click(function() {
+                var pokehash = [];
+                for (var i=0; i<pokeslots.length; i++) {
+                    var id = allPokemon.indexOf(pokeslots[i]) + 1;
+                    var level = parseInt(Math.random()*30+70);
+                    pokehash.push({'id':id, 'level':level});
+                }
+
+                var options = {
+                    "scriptUrl": "https://github.com/kathrynsiegel/pokebble/raw/master/static/game.js",
+                    "party": pokehash
+                };
+
+                console.log("setting options " + options);
+
+                document.location = 'pebblejs://close#' + encodeURIComponent(JSON.stringify(options));
+            });
+        }));
+
+
+    </script>
+    <style>
+        body, html {
+            font-family: Trebuchet MS;
+        }
+
+        .pokeslot {
+            height:100%;
+            width:100%;
+            border: 1px white solid;
+            padding-top:20px;
+            font-size: 12px;
+        }
+
+        .pokebox {
+            height:100px;
+            padding:10px;
+            border: 1px white solid;
+        }
+
+        #pokemonSearch {
+            width:40%;
+        }
+
+        .submit-button {
+            margin-left:-40px;
+            width:130px;
+        }
+
+        ul {
+            width:20px !important;
+            margin-top:20px !important; 
+        }
+    </style>
 </head>
 
 <body>

@@ -47,7 +47,7 @@ var handleResponse = function(response){
 
   if(response.my_move){
     if(myParty[0].hp === 0){
-      // TODO: force you to switch pokemon when your first one has fainted
+      party(true);
     } else {
       // TODO: make you do something when it's your turn
     }
@@ -57,7 +57,7 @@ var handleResponse = function(response){
 };
 
 // Challenge screen
-var challenge = function(pokemon, enemy) {
+var challenge = function(pokemon) {
   var fightPokemon = myParty.filter(function (el) {
       return el["name"] === pokemon;
   });
@@ -75,6 +75,7 @@ var challenge = function(pokemon, enemy) {
     }
     challengeState += moves[i]["name"] + "\n";
   }
+  challengeState += "Switch Pokemon";
 
   simply.text({body: challengeState});
 
@@ -84,7 +85,7 @@ var challenge = function(pokemon, enemy) {
   simply.on('singleClick', function(e) {
     if (e.button === 'up' && currentPointerLine > 4) {
       currentPointerLine -= 1;
-    } else if (e.button === 'down' && currentPointerLine < 3 + moves.length) {
+    } else if (e.button === 'down' && currentPointerLine < 4 + moves.length) {
         currentPointerLine += 1;
     }
     // Update body text
@@ -94,8 +95,13 @@ var challenge = function(pokemon, enemy) {
 
   // Select move
   simply.on('longClick', function(e) {
-    var move = bodyText.split('\n')[currentPointerLine];
-    requests.postAttack(trainerId, currentPointerLine - 4, handleResponse, handleResponse);
+    
+    if (currentPointerLine < bodyText.split('\n').length - 1) {
+      var move = bodyText.split('\n')[currentPointerLine];
+      requests.postAttack(trainerId, currentPointerLine - 4, handleResponse, handleResponse);
+    } else { // switch pokemon
+      party(true);
+    }
   });
 };
 
@@ -148,7 +154,7 @@ var visibleBodyText = function(text, currLineNumber, offset=0) {
 //            in a battle, and any pokemon can be selected.
 //           if inBattle is True, then trainer is currently in a
 //            battle, and only usable Pokemon (>0 hp) can be selected.
-var party = function(inBattle = False, enemy=[]) {
+var party = function(inBattle = false) {
   var liveParty = "";
   var deadParty = "";
   var livePartyCount = 0;
@@ -218,7 +224,7 @@ var party = function(inBattle = False, enemy=[]) {
     var pokemon = bodyText.split('\n')[currentPointerLine];
     if (inBattle) {
       // change to challenge screen
-      challenge(pokemon,enemy);
+      challenge(pokemon);
     }
     else {
       // change to stat screen of that pokemon
