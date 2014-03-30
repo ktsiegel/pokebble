@@ -205,6 +205,7 @@ var party = function(inBattle) {
   // Scroll through Pokemon list
   var currentPointerLine = 1; // tracks where the pokemon selector (">") is
   simply.text({ body: visibleBodyText(bodyText, currentPointerLine, 0) });
+  simply.text({title: 'yo', body: 'hi'})
   console.log("19 - game.js");
   simply.on('singleClick', function(e) {
       if (e.button === 'up') {
