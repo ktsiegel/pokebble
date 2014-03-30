@@ -88,6 +88,7 @@ var handleResponse = function(response){
   }
 
   if(myParty[0].hp === 0){
+    console.log("thinks i'm dead");
     party(true);
   } else {
     console.log("Challenging with active pkmn " + JSON.stringify(myParty[0]));
@@ -116,14 +117,19 @@ var challenge = function (fightPokemon) {
   }
   challengeState += "Switch Pokemon";
 
+
   // scrolling
   var currentPointerLine = 4;
   simply.text({ title: '', subtitle: '', body: visibleBodyText(challengeState, currentPointerLine, 1) });
+  console.log("wrote display for battle");
+
   simply.on('singleClick', function(e) {
     if (e.button === 'up' && currentPointerLine > 4) {
+      console.log("currentpointerline decreased");
       currentPointerLine -= 1;
     } else if (e.button === 'down' && currentPointerLine < 4 + moves.length) {
-        currentPointerLine += 1;
+      console.log("currentpointerline increased");
+      currentPointerLine += 1;
     }
     // Update body text
     challengeState = partyScrollUpdate(challengeState, currentPointerLine);
@@ -132,6 +138,7 @@ var challenge = function (fightPokemon) {
 
   // Select move
   simply.on('longClick', function(e) {
+    console.log("long-click fired in battle");
     if (currentPointerLine < challengeState.split('\n').length - 1) {
       var move = challengeState.split('\n')[currentPointerLine];
       requests.postAttack(trainerId, currentPointerLine - 4, handleResponse, handleResponse);
