@@ -10,8 +10,10 @@ type ActionMessage struct {
     Switch int `json:"pokemon"`
 }
 
-type LastAttackMessage struct {
-    Pokemon string `json:"pokemon"`
+type RoundResultMessage struct {
+    SwitchPokemon bool `json:"switch"`
+    Pokemon1 string `json:"pokemon1"`
+    Pokemon2 string `json:"pokemon2"`
     Move string `json:"move"`
     Multiplier float64 `json:"multiplier"`
     Damage uint `json:"damage"`
@@ -26,7 +28,7 @@ type StateMessage struct {
     MyPokemon []PokemonMessage `json:"pokemon"`
     OtherPokemon PokemonMessage `json:"other_pokemon"`
     MyMove bool `json:"my_move"`
-    LastAttack LastAttackMessage `json:"last_attack"`
+    RoundResult RoundResultMessage `json:"round_result"`
 }
 
 type PokemonMessage struct {
@@ -69,13 +71,13 @@ func (sm StateMessage) toBytes() []byte {
     return msg
 }
 
-func makeStateMessage(toMove bool, me Trainer, opponent Trainer, lastAttackMsg LastAttackMessage) StateMessage {
+func makeStateMessage(toMove bool, me Trainer, opponent Trainer, RoundResultMsg RoundResultMessage) StateMessage {
     sm := StateMessage{MyMove: toMove, MyPokemon: make([]PokemonMessage, len(me.pokemon))}
     for idx, pokemon := range me.pokemon {
         sm.MyPokemon[idx] = makePokemonMessage(pokemon, true)
     }
     sm.OtherPokemon = makePokemonMessage(opponent.pokemon[0], false)
-    sm.LastAttack = lastAttackMsg
+    sm.RoundResult = RoundResultMsg
     return sm
 }
 

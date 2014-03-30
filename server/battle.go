@@ -120,7 +120,7 @@ func (battle *Battle) start(trainer1 *Trainer, trainer2 *Trainer) {
     log.Println("Battle starting between", trainer1.id, "and", trainer2.id)
 
     train1ToMove := rand.Float32() < 0.5
-    lastAttackMsg := LastAttackMessage{}
+    roundResultMsg := RoundResultMessage{}
 
     roundNum := 0
     for {
@@ -147,16 +147,16 @@ func (battle *Battle) start(trainer1 *Trainer, trainer2 *Trainer) {
             break
         }
 
-        state1, state2 := battle.getStates(train1ToMove, lastAttackMsg)
+        state1, state2 := battle.getStates(train1ToMove, roundResultMsg)
         log.Println("Sending states")
         trainer1.outbox <- state1.toBytes()
         trainer2.outbox <- state2.toBytes()
 
         log.Println("Waiting for action", train1ToMove)
         if train1ToMove {
-            lastAttackMsg = battle.process(<-trainer1.action)
+            roundResultMsg = battle.process(<-trainer1.action)
         } else {
-            lastAttackMsg = battle.process(<-trainer2.action)
+            roundResultMsg = battle.process(<-trainer2.action)
         }
     }
     trainer1.battling = false
@@ -169,10 +169,10 @@ func (battle *Battle) start(trainer1 *Trainer, trainer2 *Trainer) {
     }
 }
 
-func (battle *Battle) process(action *ActionMessage) LastAttackMessage {
+func (battle *Battle) process(action *ActionMessage) RoundResultMessage{
     log.Println("Processing", action)
 
-    result := LastAttackMessage{}
+    result := RoundResultMessage{}
     trainer := Trainer{}
     other_trainer := Trainer{}
 
@@ -189,11 +189,16 @@ func (battle *Battle) process(action *ActionMessage) LastAttackMessage {
             multiplier, dmg := trainer.pokemon[0].attack(other_trainer.pokemon[0], action.Attack)
             result.Multiplier = multiplier
             result.Damage = dmg
-            result.Pokemon = trainer.pokemon[0].name
+            result.Pokemon1 = trainer.pokemon[0].name
+            result.Pokemon2 = other_trainer.pokemon[0].name
             result.Move = trainer.pokemon[0].moves[action.Attack].Name
         }
     } else if action.Switch >= 0 && action.Switch < len(trainer.pokemon) {
         if trainer.pokemon[action.Switch].state.health > 0 {
+            result.SwitchPokemon = true
+            result.Pokemon1 = trainer.pokemon[0].name
+            result.Pokemon2 = trainer.pokemon[1].name
+
             tmp := trainer.pokemon[action.Switch]
             trainer.pokemon[action.Switch] = trainer.pokemon[0]
             trainer.pokemon[0] = tmp
@@ -202,11 +207,11 @@ func (battle *Battle) process(action *ActionMessage) LastAttackMessage {
     return result
 }
 
-func (battle *Battle) getStates(train1ToMove bool, lastAttackMsg LastAttackMessage) (state1 StateMessage, state2 StateMessage) {
+func (battle *Battle) getStates(train1ToMove bool, roundResultMsg RoundResultMessage) (state1 StateMessage, state2 StateMessage) {
     trainer1 := *battle.conn1.trainer
     trainer2 := *battle.conn2.trainer
 
-    state1 = makeStateMessage(train1ToMove, trainer1, trainer2, lastAttackMsg)
-    state2 = makeStateMessage(!train1ToMove, trainer2, trainer1, lastAttackMsg)
+    state1 = makeStateMessage(train1ToMove, trainer1, trainer2, roundResultMsg)
+    state2 = makeStateMessage(!train1ToMove, trainer2, trainer1, roundResultMsg)
     return
 }
