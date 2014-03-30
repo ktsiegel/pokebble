@@ -25,8 +25,8 @@ var handleResponse = function(response){
   console.log("handling response...");
 
   var title = "", message = "";
-  var result1 = data.round_result[0];
-  var result2 = data.round_result[1];
+  var result1 = response.round_result[0];
+  var result2 = response.round_result[1];
 
   if(result1.pokemon1 !== ""){
     if(!result1.switch){
