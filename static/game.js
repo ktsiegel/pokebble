@@ -13,9 +13,9 @@ console.log("4 - game.js");
 
 // Display stats for a pokemon
 // pokemon -> a standard pokemon hash
-// var stats = function(pokemon) {
+var stats = function(pokemon) {
 
-// }
+};
 
 var handleResponse = function(response){
   myParty = response.pokemon;
