@@ -30,7 +30,7 @@ requests.postBattleStart = function (trainer, party, battleStart, nextTurn) {
       cache: false,
       data: {
         "trainer": trainer,
-        "pokemon": party,
+        "pokemon": JSON.stringify(party),
         "lat": pos.coords.longitude,
         "lng": pos.coords.latitude
       }
