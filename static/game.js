@@ -257,7 +257,7 @@ console.log("7 - game.js");
 // The welcome menu
 var menu = function() {
   console.log("9 -- game.js");
-  simply.text({title: "Welcome to Pokebble!", subtitle: "Long hold the center button to play.");
+  simply.text({title: "Welcome to Pokebble!", subtitle: "Long hold the center button to play."});
   simply.vibe('short');
   console.log("10 - game.js");
   simply.on('longClick', function(e) {
