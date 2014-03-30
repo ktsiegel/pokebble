@@ -33,8 +33,12 @@ func (bc *BattleConnection) reader() {
         } else {
             battle := PendingBattle{createdTime: time.Now(), conn: bc}
             _ = json.Unmarshal(msg, &battle)
-            battle.initialize()
-            pendingBattles.toAdd <- &battle
+            if !battle.Spectator {
+                battle.initialize()
+                pendingBattles.toAdd <- &battle
+            } else {
+                battle.trainer = trainers[battle.Trainer_id]
+            }
             trainer := battle.trainer
 
             bc.trainer = trainer
