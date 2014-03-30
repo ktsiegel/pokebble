@@ -27,73 +27,74 @@ var handleResponse = function(response){
   var title = "", message = "";
   var result1 = response.round_result[0];
   var result2 = response.round_result[1];
-    if(result1.pokemon1 !== ""){
-      if(!result1.switch){
-        title = result1.pokemon1 + " used " + result1.move;
 
-        if(result1.missed){
-          message = result1.pokemon1 + "'s attack missed!";
-        } else if(result1.multiplier === 0) {
+  if(response.outcome === "Won") {
+    Pebble.showSimpleNotificationOnPebble("You win!", "Congratulations! You're a Pokemon Master!");
+    menu();
+  } else if(response.outcome === "Lost"){
+    Pebble.showSimpleNotificationOnPebble("You lost...", "Better luck next time!");
+    menu();
+  }
+
+  if(result1.pokemon1 !== ""){
+    title = "";
+    message = "";
+
+    if(result2.pokemon1 !== ""){
+      if(!result2.switch){
+        title = result2.pokemon1 + " used " + result2.move;
+
+        if(result2.missed){
+          message = result2.pokemon1 + "'s attack missed!";
+        } else if(result2.multiplier === 0) {
           message = "It had no effect!";
         } else{
-          if(result1.multiplier > 1){
+          if(result2.multiplier > 1){
             message = "It's super effective!\n";
-          } else if(result1.multiplier < 1) {
+          } else if(result2.multiplier < 1) {
             message = "It's not very effective...\n";
           }
-          message += result1.pokemon2 + " lost " + result1.damage + "HP.";
+          message += result2.pokemon2 + " lost " + result2.damage + "HP.";
 
-          var attackTarget = (result1.trainer == trainerId) ? enemy : myParty[0];
-          if(attackTarget.hp === 0){
-            message += "\n" + result1.pokemon2 + " fainted!";
+          var attackTarget2 = (result2.trainer == trainerId) ? enemy : myParty[0];
+          if(attackTarget2.hp === 0){
+            message += "\n" + result2.pokemon2 + " fainted!";
           }
         }
       } else {
         title = "Pokemon Switched!";
-        message = "Come back, " + result1.pokemon1 + "!\nGo " + result1.pokemon1;
+        message = "Come back, " + result2.pokemon1 + "!\nGo " + result2.pokemon2;
       }
 
       Pebble.showSimpleNotificationOnPebble(title, message);
+    }
 
-      title = "";
-      message = "";
+    if(!result1.switch){
+      title = result1.pokemon1 + " used " + result1.move;
 
-      if(result2.pokemon1 !== ""){
-        if(!result2.switch){
-          title = result2.pokemon1 + " used " + result2.move;
-
-          if(result2.missed){
-            message = result2.pokemon1 + "'s attack missed!";
-          } else if(result2.multiplier === 0) {
-            message = "It had no effect!";
-          } else{
-            if(result2.multiplier > 1){
-              message = "It's super effective!\n";
-            } else if(result2.multiplier < 1) {
-              message = "It's not very effective...\n";
-            }
-            message += result2.pokemon2 + " lost " + result2.damage + "HP.";
-
-            var attackTarget2 = (result2.trainer == trainerId) ? enemy : myParty[0];
-            if(attackTarget2.hp === 0){
-              message += "\n" + result2.pokemon2 + " fainted!";
-            }
-          }
-        } else {
-          title = "Pokemon Switched!";
-          message = "Come back, " + result2.pokemon1 + "!\nGo " + result2.pokemon1;
+      if(result1.missed){
+        message = result1.pokemon1 + "'s attack missed!";
+      } else if(result1.multiplier === 0) {
+        message = "It had no effect!";
+      } else{
+        if(result1.multiplier > 1){
+          message = "It's super effective!\n";
+        } else if(result1.multiplier < 1) {
+          message = "It's not very effective...\n";
         }
+        message += result1.pokemon2 + " lost " + result1.damage + "HP.";
 
-        Pebble.showSimpleNotificationOnPebble(title, message);
+        var attackTarget = (result1.trainer == trainerId) ? enemy : myParty[0];
+        if(attackTarget.hp === 0){
+          message += "\n" + result1.pokemon2 + " fainted!";
+        }
       }
+    } else {
+      title = "Pokemon Switched!";
+      message = "Come back, " + result1.pokemon1 + "!\nGo " + result1.pokemon2;
+    }
 
-      if(response.outcome === "Won") {
-        Pebble.showSimpleNotificationOnPebble("You win!", "Congratulations! You're a Pokemon Master!");
-        menu();
-      } else if(response.outcome === "Lost"){
-        Pebble.showSimpleNotificationOnPebble("You lost :(", "Better luck next time!");
-        menu();
-      }
+    Pebble.showSimpleNotificationOnPebble(title, message);
   }
 
   simply.off('accelTap');
