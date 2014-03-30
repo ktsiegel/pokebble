@@ -11,6 +11,7 @@ type ActionMessage struct {
 }
 
 type RoundResultMessage struct {
+    Trainer string `json:"trainer"`
     SwitchPokemon bool `json:"switch"`
     Pokemon1 string `json:"pokemon1"`
     Pokemon2 string `json:"pokemon2"`

@@ -12,6 +12,7 @@ import (
 
 type PendingBattle struct {
     Trainer_id string `json:"trainer"`
+    Spectator bool `json:"spectator"`
     Lat float64 `json:"lat"`
     Lng float64 `json:"lng"`
     Party []SimplePokemon `json:"pokemon"`
@@ -80,7 +81,7 @@ func (pbs *PendingBattles) run() {
                 // try to find a match
                 matched := false
                 for pb := range pbs.data {
-                    if c.trainer == pb.trainer {
+                    if c.trainer.id == pb.trainer.id {
                         break
                     }
                     if c.CloseTo(pb) {
@@ -117,7 +118,7 @@ func (pbs *PendingBattles) run() {
 }
 
 func (battle *Battle) start(trainer1 *Trainer, trainer2 *Trainer) {
-    log.Println("Battle starting between", trainer1.id, "and", trainer2.id)
+    log.Println("Battle starting between", trainer1, "and", trainer2)
 
     var roundResultMsg1 RoundResultMessage
     var roundResultMsg2 RoundResultMessage
@@ -126,6 +127,13 @@ func (battle *Battle) start(trainer1 *Trainer, trainer2 *Trainer) {
     for {
         log.Println("Round", roundNum)
         roundNum += 1
+
+        state1, state2 := battle.getStates(roundResultMsg1, roundResultMsg2)
+        log.Println("Sending states")
+        trainer1.outbox <- state1.toBytes()
+        trainer2.outbox <- state2.toBytes()
+        roundResultMsg1 = RoundResultMessage{}
+        roundResultMsg2 = RoundResultMessage{}
 
         // check if the match is over
         if battle.conn1.trainer.isWiped() && battle.conn2.trainer.isWiped() {
@@ -146,11 +154,6 @@ func (battle *Battle) start(trainer1 *Trainer, trainer2 *Trainer) {
             trainer2.outbox <- makeBattleResult(0).toBytes()
             break
         }
-        state1, state2 := battle.getStates(roundResultMsg1, roundResultMsg2)
-        log.Println("Sending states")
-        trainer1.outbox <- state1.toBytes()
-        trainer2.outbox <- state2.toBytes()
-
         // check if one of the pokemon is fainted
         if trainer1.pokemon[0].state.health == 0 {
             for {
@@ -177,20 +180,22 @@ func (battle *Battle) start(trainer1 *Trainer, trainer2 *Trainer) {
         log.Println("Waiting for action")
         action1 := <-trainer1.action
         action2 := <-trainer2.action
-        if rand.Float64() <= 0.5 {
+        if action1.Switch != -1 {
+            roundResultMsg1 = battle.process(action1)
+            roundResultMsg2 = battle.process(action2)
+        } else if action2.Switch != -1 {
+            roundResultMsg1 = battle.process(action2)
+            roundResultMsg2 = battle.process(action1)
+        } else if rand.Float64() <= 0.5 {
             // trainer 1 goes first
             roundResultMsg1 = battle.process(action1)
             if trainer2.pokemon[0].state.health > 0 {
                 roundResultMsg2 = battle.process(action2)
-            } else {
-                roundResultMsg2 = RoundResultMessage{}
             }
         } else {
             roundResultMsg1 = battle.process(action2)
             if trainer1.pokemon[0].state.health > 0 {
                 roundResultMsg2 = battle.process(action1)
-            } else {
-                roundResultMsg2 = RoundResultMessage{}
             }
         }
     }
@@ -207,16 +212,19 @@ func (battle *Battle) start(trainer1 *Trainer, trainer2 *Trainer) {
 func (battle *Battle) process(action *ActionMessage) RoundResultMessage {
     log.Println("Processing", action)
 
-    result := RoundResultMessage{}
+    var result RoundResultMessage
     var trainer Trainer
     var other_trainer Trainer
     if action.trainer == battle.conn1.trainer {
         trainer = *battle.conn1.trainer
         other_trainer = *battle.conn2.trainer
+        result.Trainer = trainer.id
     } else {
         trainer = *battle.conn2.trainer
         other_trainer = *battle.conn1.trainer
+        result.Trainer = trainer.id
     }
+    log.Println("TRAINER ID", trainer.id, result.Trainer)
     activePokemon := trainer.pokemon[0]
 
     if activePokemon.state.health > 0 && action.Attack >= 0 && action.Attack < len(activePokemon.moves) {
@@ -236,7 +244,7 @@ func (battle *Battle) process(action *ActionMessage) RoundResultMessage {
         if trainer.pokemon[action.Switch].state.health > 0 {
             result.SwitchPokemon = true
             result.Pokemon1 = trainer.pokemon[0].name
-            result.Pokemon2 = trainer.pokemon[1].name
+            result.Pokemon2 = trainer.pokemon[action.Switch].name
 
             tmp := trainer.pokemon[action.Switch]
             trainer.pokemon[action.Switch] = trainer.pokemon[0]
