@@ -67,7 +67,7 @@ var challenge = function(pokemon) {
   var fightPokemon = myParty.filter(function (el) {
       return el["name"] === pokemon;
   });
-  challengeState = "Enemy " + enemy["name"] +
+  var challengeState = "Enemy " + enemy["name"] +
     "\n (hp:" + enemy["hp"] + "/" + enemy["maxhp"] + ")\n" +
     "My " + fightPokemon["name"] +
     "\n (hp:" + fightPokemon["hp"] + "/" + fightPokemon["maxhp"] + ")\n" ;
@@ -83,11 +83,9 @@ var challenge = function(pokemon) {
   }
   challengeState += "Switch Pokemon";
 
-  simply.text({body: challengeState});
-
   // scrolling
   var currentPointerLine = 4;
-  simply.text({ body: visibleBodyText(bodyText, currentPointerLine, 1) });
+  simply.text({ body: visibleBodyText(challengeState, currentPointerLine, 1) });
   simply.on('singleClick', function(e) {
     if (e.button === 'up' && currentPointerLine > 4) {
       currentPointerLine -= 1;
@@ -95,15 +93,15 @@ var challenge = function(pokemon) {
         currentPointerLine += 1;
     }
     // Update body text
-    bodyText = partyScrollUpdate(bodyText, currentPointerLine);
-    simply.text({ body: visibleBodyText(bodyText, currentPointerLine, 1) });
+    challengeState = partyScrollUpdate(challengeState, currentPointerLine);
+    simply.text({ body: visibleBodyText(challengeState, currentPointerLine, 1) });
   });
 
   // Select move
   simply.on('longClick', function(e) {
 
-    if (currentPointerLine < bodyText.split('\n').length - 1) {
-      var move = bodyText.split('\n')[currentPointerLine];
+    if (currentPointerLine < challengeState.split('\n').length - 1) {
+      var move = challengeState.split('\n')[currentPointerLine];
       requests.postAttack(trainerId, currentPointerLine - 4, handleResponse, handleResponse);
     } else { // switch pokemon
       party(true);
@@ -184,6 +182,7 @@ var party = function(inBattle) {
   //   pokemon5
   //   pokemon6
 
+  console.log("15 - game.js");
   for (var i=0; i<myParty.length; i++) {
     var pokemon = myParty[i];
     if (pokemon["hp"] > 0) {
@@ -256,7 +255,7 @@ console.log("7 - game.js");
 
 // The welcome menu
 var menu = function() {
-  console.log("9 -- game.js");
+  console.log("9 - game.js");
   simply.text({title: "Welcome to Pokebble!", subtitle: "Long hold the center button to play."});
   simply.vibe('short');
   console.log("10 - game.js");
