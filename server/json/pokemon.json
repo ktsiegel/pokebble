@@ -283,15 +283,16 @@
             "swift"
         ]
     },
-    "29": {
-        "name": "Nidoran",
+    "30": {
+        "name": "Nidorina",
         "attack": 47,
         "defense": 52,
-        "evolveLevel": 16,
-        "evolveTo": "30",
+        "evolveTo": "31",
         "type": "poison",
         "moves": [
-            "scratch"
+            "peck",
+            "scratch",
+            "poison sting"
         ]
     },
     "31": {
@@ -306,15 +307,16 @@
             "superpower"
         ]
     },
-    "32": {
-        "name": "Nidoran",
+    "33": {
+        "name": "Nidorino",
         "attack": 57,
         "defense": 40,
-        "evolveLevel": 16,
-        "evolveTo": "33",
+        "evolveTo": "34",
         "type": "poison",
         "moves": [
-            "peck"
+            "peck",
+            "scratch",
+            "poison sting"
         ]
     },
     "34": {
