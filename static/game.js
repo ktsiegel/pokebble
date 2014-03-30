@@ -184,6 +184,7 @@ var party = function(inBattle) {
 
   console.log("15 - game.js");
   for (var i=0; i<myParty.length; i++) {
+    console.log("16 - game.js");
     var pokemon = myParty[i];
     if (pokemon["hp"] > 0) {
       if (livePartyCount === 0) {
@@ -198,11 +199,13 @@ var party = function(inBattle) {
       deadPartyCount += 1;
     }
   }
+  console.log("17 - game.js");
   var bodyText = "Usable:\n" + liveParty + "\nFainted:\n" + deadParty;
-
+  console.log("18 - game.js");
   // Scroll through Pokemon list
   var currentPointerLine = 1; // tracks where the pokemon selector (">") is
   simply.text({ body: visibleBodyText(bodyText, currentPointerLine, 0) });
+  console.log("19 - game.js");
   simply.on('singleClick', function(e) {
       if (e.button === 'up') {
         // Can only scroll among pokemon, so handle skipping the blank line
