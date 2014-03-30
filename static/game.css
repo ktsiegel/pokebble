@@ -1,5 +1,5 @@
 body, html {
-	font-family: Lucida Console;
+	font-family: Trebuchet MS;
 }
 
 .pokeslot {
@@ -7,6 +7,7 @@ body, html {
 	width:100%;
 	border: 1px white solid;
 	padding-top:20px;
+	font-size: 12px;
 }
 
 .pokebox {
@@ -26,5 +27,5 @@ body, html {
 
 ul {
 	width:20px !important;
-	margin-top:10px;
+	margin-top:20px !important; 
 }
