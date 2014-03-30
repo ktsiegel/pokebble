@@ -119,15 +119,15 @@ func (pbs *PendingBattles) run() {
 func (battle *Battle) start(trainer1 *Trainer, trainer2 *Trainer) {
     log.Println("Battle starting between", trainer1.id, "and", trainer2.id)
 
-    train1ToMove := rand.Float32() < 0.5
-    roundResultMsg := RoundResultMessage{}
+    var roundResultMsg1 RoundResultMessage
+    var roundResultMsg2 RoundResultMessage
 
     roundNum := 0
     for {
         log.Println("Round", roundNum)
         roundNum += 1
-        train1ToMove = !train1ToMove
 
+        // check if the match is over
         if battle.conn1.trainer.isWiped() && battle.conn2.trainer.isWiped() {
             log.Println("TIE")
             trainer1.outbox <- makeBattleResult(2).toBytes()
@@ -146,17 +146,52 @@ func (battle *Battle) start(trainer1 *Trainer, trainer2 *Trainer) {
             trainer2.outbox <- makeBattleResult(0).toBytes()
             break
         }
-
-        state1, state2 := battle.getStates(train1ToMove, roundResultMsg)
+        state1, state2 := battle.getStates(roundResultMsg1, roundResultMsg2)
         log.Println("Sending states")
         trainer1.outbox <- state1.toBytes()
         trainer2.outbox <- state2.toBytes()
 
-        log.Println("Waiting for action", train1ToMove)
-        if train1ToMove {
-            roundResultMsg = battle.process(<-trainer1.action)
+        // check if one of the pokemon is fainted
+        if trainer1.pokemon[0].state.health == 0 {
+            for {
+                action := <-trainer1.action
+                if action.Switch != -1 {
+                    battle.process(action)
+                    break
+                }
+            }
+            continue
+        }
+        if trainer2.pokemon[0].state.health == 0 {
+            for {
+                action := <-trainer2.action
+                if action.Switch != -1 {
+                    battle.process(action)
+                    break
+                }
+            }
+            continue
+        }
+
+        // get moves, execute
+        log.Println("Waiting for action")
+        action1 := <-trainer1.action
+        action2 := <-trainer2.action
+        if rand.Float64() <= 0.5 {
+            // trainer 1 goes first
+            roundResultMsg1 = battle.process(action1)
+            if trainer2.pokemon[0].state.health > 0 {
+                roundResultMsg2 = battle.process(action2)
+            } else {
+                roundResultMsg2 = RoundResultMessage{}
+            }
         } else {
-            roundResultMsg = battle.process(<-trainer2.action)
+            roundResultMsg1 = battle.process(action2)
+            if trainer1.pokemon[0].state.health > 0 {
+                roundResultMsg2 = battle.process(action1)
+            } else {
+                roundResultMsg2 = RoundResultMessage{}
+            }
         }
     }
     trainer1.battling = false
@@ -169,7 +204,7 @@ func (battle *Battle) start(trainer1 *Trainer, trainer2 *Trainer) {
     }
 }
 
-func (battle *Battle) process(action *ActionMessage) RoundResultMessage{
+func (battle *Battle) process(action *ActionMessage) RoundResultMessage {
     log.Println("Processing", action)
 
     result := RoundResultMessage{}
@@ -211,11 +246,12 @@ func (battle *Battle) process(action *ActionMessage) RoundResultMessage{
     return result
 }
 
-func (battle *Battle) getStates(train1ToMove bool, roundResultMsg RoundResultMessage) (state1 StateMessage, state2 StateMessage) {
+func (battle *Battle) getStates(roundResultMsg1, roundResultMsg2 RoundResultMessage) (state1 StateMessage, state2 StateMessage) {
     trainer1 := *battle.conn1.trainer
     trainer2 := *battle.conn2.trainer
 
-    state1 = makeStateMessage(train1ToMove, trainer1, trainer2, roundResultMsg)
-    state2 = makeStateMessage(!train1ToMove, trainer2, trainer1, roundResultMsg)
+    state1 = makeStateMessage(trainer1, trainer2, roundResultMsg1, roundResultMsg2)
+    state2 = makeStateMessage(trainer2, trainer1, roundResultMsg1, roundResultMsg2)
     return
 }
+
