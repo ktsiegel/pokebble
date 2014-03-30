@@ -7,6 +7,7 @@ console.log("1 - game.js");
 var trainerId = Pebble.getAccountToken();
 console.log("2 - game.js");
 var myParty = localStorage.getItem('party');
+console.log("retrieved party " + JSON.stringify(myParty));
 console.log("3 - game.js");
 var enemy;
 console.log("4 - game.js");

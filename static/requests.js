@@ -26,6 +26,7 @@ requests.getResponse = function (trainer, callback){
 // the JSON response data is passed to the nextTurn callback.
 requests.postBattleStart = function (trainer, party, battleStart, nextTurn) {
   navigator.geolocation.getCurrentPosition(function(pos) {
+    console.log(party);
     console.log("posted battle request for party " + JSON.stringify(party));
     ajax({
       method: 'post',
@@ -35,7 +36,7 @@ requests.postBattleStart = function (trainer, party, battleStart, nextTurn) {
       cache: false,
       data: {
         "trainer": trainer,
-        "pokemon": JSON.stringify(party),
+        "pokemon": party,
         "lat": pos.coords.longitude,
         "lng": pos.coords.latitude
       }
