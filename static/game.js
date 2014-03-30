@@ -165,6 +165,8 @@ console.log("6 - game.js");
 //           if inBattle is True, then trainer is currently in a
 //            battle, and only usable Pokemon (>0 hp) can be selected.
 var party = function(inBattle) {
+  console.log("14 - game.js");
+
   var liveParty = "";
   var deadParty = "";
   var livePartyCount = 0;
@@ -255,8 +257,7 @@ console.log("7 - game.js");
 // The welcome menu
 var menu = function() {
   console.log("9 -- game.js");
-  simply.title('Welcome to Pokebble!');
-  simply.subtitle('Long hold the center button to play.');
+  simply.text({title: "Welcome to Pokebble!", subtitle: "Long hold the center button to play.");
   simply.vibe('short');
   console.log("10 - game.js");
   simply.on('longClick', function(e) {
@@ -264,6 +265,7 @@ var menu = function() {
     simply.vibe('long');
     console.log("12 - game.js");
     requests.postBattleStart(trainerId, myParty, handleResponse, handleResponse);
+    console.log("13 - game.js");
     party(false);
   });
 };
