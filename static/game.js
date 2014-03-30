@@ -29,9 +29,11 @@ var handleResponse = function(response){
   var result2 = response.round_result[1];
 
   if(response.outcome === "Won") {
+    console.log('you win');
     Pebble.showSimpleNotificationOnPebble("You win!", "Congratulations! You're a Pokemon Master!");
     menu();
   } else if(response.outcome === "Lost"){
+    console.log('you lose');
     Pebble.showSimpleNotificationOnPebble("You lost...", "Better luck next time!");
     menu();
   }
@@ -327,7 +329,7 @@ var party = function(inBattle) {
 console.log("7 - game.js");
 
 // The welcome menu
-function menu () {
+var menu = function() {
   console.log("9 - game.js");
   simply.text({title: "Welcome to Pokebble!", subtitle: "Long hold the center button to play.", body: ''});
   simply.vibe('short');
@@ -346,7 +348,7 @@ function menu () {
       requests.postBattleStart(trainerId, myParty, handleResponse, handleResponse);
     }
   });
-}
+};
 
 console.log("8 - game.js");
 menu();
