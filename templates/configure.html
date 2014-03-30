@@ -174,7 +174,7 @@
                     if ($.inArray(pokemon, allPokemon)) {
                         pokeslots.push(pokemon);
                         var pokeslot = "#pokeslot-" + pokeslots.length.toString();
-                        $(pokeslot).append("<img style='max-height:60px' src='http://img.pokemondb.net/sprites/black-white/anim/normal/"+pokemon.toLowerCase()+".gif'/>");
+                        $(pokeslot).append("<img class='img-pokemon' src='http://img.pokemondb.net/sprites/black-white/anim/normal/"+pokemon.toLowerCase()+".gif'/>");
                     }
                 }
                 $('#pokemonSearch').val("");
@@ -375,7 +375,7 @@
             font-size: 12px;
             background-color: white;
             border-radius: 10px;
-            padding:10px;
+            padding:5px;
         }
 
         .pokebox {
@@ -405,6 +405,14 @@
 
         .ui-helper-hidden-accessible {
             display: none !important;
+        }
+
+        .img-pokemon {
+            max-height: 70px;
+            position: absolute;
+            bottom: 15px;
+            margin: auto;
+            left: 40%;
         }
     </style>
 </head>
