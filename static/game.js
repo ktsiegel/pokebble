@@ -2,7 +2,7 @@
 /* global Pebble */
 
 console.log("0 - game.js");
-var requests = require('requests.js');
+var requests = require('requests.js?date=' + Date.now().toString());
 console.log("1 - game.js");
 var trainerId = Pebble.getAccountToken();
 console.log("2 - game.js");
