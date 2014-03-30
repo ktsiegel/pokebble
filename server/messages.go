@@ -17,6 +17,7 @@ type RoundResultMessage struct {
     Move string `json:"move"`
     Multiplier float64 `json:"multiplier"`
     Damage uint `json:"damage"`
+    Miss bool `json:"miss"`
 }
 
 type BattleResult struct {

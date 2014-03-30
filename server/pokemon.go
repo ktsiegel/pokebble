@@ -41,6 +41,7 @@ type PokemonState struct {
 type PokemonMove struct {
     Name string `json:"name"`
     MaxPP uint `json:"pp"`
+    Accuracy float64 `json:"accuracy"`
     Power uint `json:"power"`
     TypeString string `json:"type"`
     moveType *Type

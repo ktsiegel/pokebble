@@ -173,9 +173,8 @@ func (battle *Battle) process(action *ActionMessage) RoundResultMessage{
     log.Println("Processing", action)
 
     result := RoundResultMessage{}
-    trainer := Trainer{}
-    other_trainer := Trainer{}
-
+    var trainer Trainer
+    var other_trainer Trainer
     if action.trainer == battle.conn1.trainer {
         trainer = *battle.conn1.trainer
         other_trainer = *battle.conn2.trainer
@@ -183,15 +182,20 @@ func (battle *Battle) process(action *ActionMessage) RoundResultMessage{
         trainer = *battle.conn2.trainer
         other_trainer = *battle.conn1.trainer
     }
+    activePokemon := trainer.pokemon[0]
 
-    if trainer.pokemon[0].state.health > 0 && action.Attack >= 0 && action.Attack < len(trainer.pokemon[0].moves) {
-        if trainer.pokemon[0].state.pp[action.Attack] > 0 {
-            multiplier, dmg := trainer.pokemon[0].attack(other_trainer.pokemon[0], action.Attack)
-            result.Multiplier = multiplier
-            result.Damage = dmg
-            result.Pokemon1 = trainer.pokemon[0].name
+    if activePokemon.state.health > 0 && action.Attack >= 0 && action.Attack < len(activePokemon.moves) {
+        if activePokemon.state.pp[action.Attack] > 0 {
+            if rand.Float64() < activePokemon.moves[action.Attack].Accuracy {
+                multiplier, dmg := activePokemon.attack(other_trainer.pokemon[0], action.Attack)
+                result.Multiplier = multiplier
+                result.Damage = dmg
+            } else {
+                result.Miss = true
+            }
+            result.Pokemon1 = activePokemon.name
             result.Pokemon2 = other_trainer.pokemon[0].name
-            result.Move = trainer.pokemon[0].moves[action.Attack].Name
+            result.Move = activePokemon.moves[action.Attack].Name
         }
     } else if action.Switch >= 0 && action.Switch < len(trainer.pokemon) {
         if trainer.pokemon[action.Switch].state.health > 0 {
