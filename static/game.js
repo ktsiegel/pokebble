@@ -85,7 +85,7 @@ var challenge = function(pokemon) {
 
   // scrolling
   var currentPointerLine = 4;
-  simply.text({ body: visibleBodyText(challengeState, currentPointerLine, 1) });
+  simply.text({ title: '', subtitle: '', body: visibleBodyText(challengeState, currentPointerLine, 1) });
   simply.on('singleClick', function(e) {
     if (e.button === 'up' && currentPointerLine > 4) {
       currentPointerLine -= 1;
@@ -94,7 +94,7 @@ var challenge = function(pokemon) {
     }
     // Update body text
     challengeState = partyScrollUpdate(challengeState, currentPointerLine);
-    simply.text({ body: visibleBodyText(challengeState, currentPointerLine, 1) });
+    simply.text({ title: '', subtitle: '', body: visibleBodyText(challengeState, currentPointerLine, 1) });
   });
 
   // Select move
@@ -204,8 +204,7 @@ var party = function(inBattle) {
   console.log("18 - game.js");
   // Scroll through Pokemon list
   var currentPointerLine = 1; // tracks where the pokemon selector (">") is
-  simply.text({ body: visibleBodyText(bodyText, currentPointerLine, 0) });
-  simply.text({title: '', subtitle: '', body: 'hi'})
+  simply.text({ title: '', subtitle: '', body: visibleBodyText(bodyText, currentPointerLine, 0) });
   console.log("19 - game.js");
   simply.on('singleClick', function(e) {
       if (e.button === 'up') {
@@ -231,7 +230,7 @@ var party = function(inBattle) {
       }
       // Update body text
       bodyText = partyScrollUpdate(bodyText, currentPointerLine);
-      simply.text({ body: visibleBodyText(bodyText, currentPointerLine, 0) });
+      simply.text({ title: '', subtitle: '', body: visibleBodyText(bodyText, currentPointerLine, 0) });
   });
 
   // Select pokemon
@@ -260,7 +259,7 @@ console.log("7 - game.js");
 // The welcome menu
 var menu = function() {
   console.log("9 - game.js");
-  simply.text({title: "Welcome to Pokebble!", subtitle: "Long hold the center button to play."});
+  simply.text({title: "Welcome to Pokebble!", subtitle: "Long hold the center button to play.", body: ''});
   simply.vibe('short');
   console.log("10 - game.js");
   simply.on('longClick', function(e) {
