@@ -37,9 +37,6 @@ var handleResponse = function(response){
   }
 
   if(result1.pokemon1 !== ""){
-    title = "";
-    message = "";
-
     if(result2.pokemon1 !== ""){
       if(!result2.switch){
         title = result2.pokemon1 + " used " + result2.move;
@@ -70,6 +67,9 @@ var handleResponse = function(response){
     }
 
     if(!result1.switch){
+      title = "";
+      message = "";
+
       title = result1.pokemon1 + " used " + result1.move;
 
       if(result1.missed){
@@ -327,7 +327,7 @@ var party = function(inBattle) {
 console.log("7 - game.js");
 
 // The welcome menu
-var menu = function() {
+function menu () {
   console.log("9 - game.js");
   simply.text({title: "Welcome to Pokebble!", subtitle: "Long hold the center button to play.", body: ''});
   simply.vibe('short');
@@ -346,7 +346,7 @@ var menu = function() {
       requests.postBattleStart(trainerId, myParty, handleResponse, handleResponse);
     }
   });
-};
+}
 
 console.log("8 - game.js");
 menu();
