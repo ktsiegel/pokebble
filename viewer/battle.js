@@ -62,17 +62,22 @@ $(document).on("ready", function(){
         "trainer": trainer,
         "spectator": true
     };
-
+    
+    var audio;
     conn.onopen = function(e) {
         conn.send(JSON.stringify(msg));
-    };
-
+        audio = document.createElement("audio")
+        audio.setAttribute("src", "http://mean2u.rfshq.com/downloads/music/battletheme.mp3");
+        audio.load()
+    }
+    
     conn.onmessage = function(e) {
         console.log(e.data);
         data = JSON.parse(e.data);
         var result1 = data.round_result[0];
         var result2 = data.round_result[1];
         if (result1.pokemon1 === "") { // draw pokemon as they are
+            audio.play()
             var my_pokemon = data.pokemon[0];
             var opp_pokemon = data.other_pokemon;
             changeTrainerPokemon(my_pokemon.name, my_pokemon.hp, my_pokemon.maxhp, my_pokemon.level);
