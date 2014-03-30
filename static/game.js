@@ -294,22 +294,28 @@ var party = function(inBattle) {
   simply.off('longClick');
   simply.on('longClick', function(e) {
     var pokemon = 0;
-
+    var pokename = bodyText.split('\n')[currentPointerLine];
+    console.log("looking for " + pokename);
     for(var i = 0; i < myParty.length; i++){
-      if(myParty[i].name === bodyText.split('\n')[currentPointerLine]){
+      if(myParty[i].name === pokename){
+        console.log("found " + pokename + " at position " + i);
         pokemon = i;
       }
     }
 
-    if (inBattle) {
-      // change to challenge screen
-      requests.postSwitch(trainerId, pokemon, handleResponse);
+    if(i === 0){
+      console.log(JSON.stringify(myParty));
     }
 
-    else {
+    //if (inBattle) {
+      // change to challenge screen
+      requests.postSwitch(trainerId, pokemon, handleResponse);
+    //}
+
+    //else {
       // change to stat screen of that pokemon
       // stats
-    }
+    //}
   });
 
   simply.off('accelTap');
