@@ -312,11 +312,6 @@ var party = function(inBattle) {
     }
   });
 
-  // undo switch screen (go back to battle)
-  simply.on('singleClick', 'back', function(e){
-    challenge(myParty[0]);
-  });
-
   simply.off('accelTap');
   simply.on('accelTap', function(e) {
     // Test if a fist bump: on x-axis
