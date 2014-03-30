@@ -80,29 +80,57 @@ $(document).on("ready", function(){
         } else {  // something happens in the first result
             if (result1.switch) { // switch
                 if (result1.trainer == trainer) { // my turn
-                    var my_pokemon = data.pokemon[0];
-                    if (!result2.switch && result2.pokemon != ""){
+                    var my_pokemon = data.pokemon[0]; // new pokemon
+                    if (!result2.switch && result2.pokemon1 != ""){
+                        // I switched but they didn't switch
                         var hp = my_pokemon.hp + result2.dmg
                         changeTrainerPokemon(my_pokemon.name, hp, my_pokemon.maxhp, my_pokemon.level);
+                        $('#activity-feed').prepend("<p><b>You:</b> Go " + result1.pokemon2 + "!</p>");
                     } else {
                         changeTrainerPokemon(my_pokemon.name, my_pokemon.hp, my_pokemon.maxhp, my_pokemon.level);
+                        $('#activity-feed').prepend("<p><b>You:</b> Go " + result1.pokemon2 + "!</p>");
                     }
                 } else { // their turn
                     var opp_pokemon = data.other_pokemon;
                     if (!result2.switch && result2.pokemon != ""){
                         var hp = opp_pokemon.hp + result2.dmg
                         changeOpponentPokemon(opp_pokemon.name, hp, opp_pokemon.maxhp, opp_pokemon.level);
+                        $('#activity-feed').prepend("<p><b>Enemy:</b> Go"+result1.pokemon2+"!</p>");
                     } else {
                         changeOpponentPokemon(opp_pokemon.name, opp_pokemon.hp, opp_pokemon.maxhp, opp_pokemon.level);
+                        $('#activity-feed').prepend("<p><b>Enemy:</b> Go "+result1.pokemon2+"!</p>");
                     }
                 }
             } else { // attack
                 if (result1.trainer == trainer) { // my turn
                     var opp_pokemon = data.other_pokemon;
                     attackOpponentPokemon(opp_pokemon.hp, opp_pokemon.maxhp);
+
+                    $('#activity-feed').prepend("<p><b>You:</b> " + result1.pokemon1 + ", use " + result1.move + "!</p>");
+                    
+                    
                 } else { // their turn
                     var my_pokemon = data.pokemon[0];
-                    attackTrainerPokemon(my_pokemon.hp, my_pokemon.maxhp)
+                    attackTrainerPokemon(my_pokemon.hp, my_pokemon.maxhp);
+                    $('#activity-feed').prepend("<p><b>Enemy:</b> " + result1.pokemon1 + ", use " + result1.move + "!</p>");
+                }
+
+                var message = "";
+                if(result1.missed){
+                    message = result1.pokemon1 + "'s attack missed!";
+                } else if(result1.multiplier === 0) {
+                    message = "It had no effect!";
+                } else{
+                    if(result1.multiplier > 1){
+                      message = "It's super effective!\n";
+                    } else if(result1.multiplier < 1) {
+                      message = "It's not very effective...\n";
+                    }
+                    var attackTarget = (result1.trainer == trainer) ? data.other_pokemon : data.pokemon[0];
+                    if(attackTarget.hp === 0){
+                        message += "\n" + result1.pokemon2 + " fainted!";
+                    }
+                    $('#activity-feed').prepend("<p>" + message + "</p>");
                 }
             }
         }
@@ -112,17 +140,41 @@ $(document).on("ready", function(){
                     if (result2.trainer == trainer) { // my turn
                         var my_pokemon = data.pokemon[0];
                         changeTrainerPokemon(my_pokemon.name, my_pokemon.hp, my_pokemon.maxhp, my_pokemon.level);
+                        $('#activity-feed').prepend("<p><b>You:</b> Go " + result2.pokemon2 + "!</p>");
                     } else { // their turn
                         var opp_pokemon = data.other_pokemon;
                         changeOpponentPokemon(opp_pokemon.name, opp_pokemon.hp, opp_pokemon.maxhp, opp_pokemon.level);
+                        $('#activity-feed').prepend("<p><b>Enemy:</b> Go " + result2.pokemon2 + "!</p>");
                     }
                 } else { // attack
                     if (result2.trainer == trainer) { // my turn
                         var opp_pokemon = data.other_pokemon;
                         attackOpponentPokemon(opp_pokemon.hp, opp_pokemon.maxhp);
+                        $('#activity-feed').prepend("<p><b>You:</b> " + result2.pokemon1 + ", use " + result2.move + "!</p>");
+
                     } else { // their turn
                         var my_pokemon = data.pokemon[0];
-                        attackTrainerPokemon(my_pokemon.hp, my_pokemon.maxhp)
+                        attackTrainerPokemon(my_pokemon.hp, my_pokemon.maxhp);
+                        $('#activity-feed').prepend("<p><b>Enemy:</b> " + result2.pokemon1 + ", use " + result2.move + "!</p>");
+
+                    }
+
+                    var message = "";
+                    if(result2.missed){
+                        message = result2.pokemon1 + "'s attack missed!";
+                    } else if(result2.multiplier === 0) {
+                        message = "It had no effect!";
+                    } else{
+                        if(result2.multiplier > 1){
+                          message = "It's super effective!\n";
+                        } else if(result2.multiplier < 1) {
+                          message = "It's not very effective...\n";
+                        }
+                        var attackTarget = (result2.trainer == trainer) ? data.other_pokemon : data.pokemon[0];
+                        if(attackTarget.hp === 0){
+                            message += "\n" + result2.pokemon2 + " fainted!";
+                        }
+                        $('#activity-feed').prepend("<p>" + message + "</p>");
                     }
                 }
             }
