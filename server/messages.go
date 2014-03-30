@@ -30,6 +30,7 @@ type StateMessage struct {
     MyPokemon []PokemonMessage `json:"pokemon"`
     OtherPokemon PokemonMessage `json:"other_pokemon"`
     Results []RoundResultMessage `json:"round_result"`
+    Outcome string `json:"outcome"`
 }
 
 type PokemonMessage struct {
