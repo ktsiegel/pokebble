@@ -90,6 +90,7 @@ var handleResponse = function(response){
   if(myParty[0].hp === 0){
     party(true);
   } else {
+    console.log("Challenging with active pkmn " + JSON.stringify(myParty[0]));
     challenge(myParty[0]);
   }
 };
