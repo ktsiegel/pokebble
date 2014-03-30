@@ -28,8 +28,7 @@ type BattleResult struct {
 type StateMessage struct {
     MyPokemon []PokemonMessage `json:"pokemon"`
     OtherPokemon PokemonMessage `json:"other_pokemon"`
-    MyMove bool `json:"my_move"`
-    RoundResult RoundResultMessage `json:"round_result"`
+    Results []RoundResultMessage `json:"round_result"`
 }
 
 type PokemonMessage struct {
@@ -72,13 +71,13 @@ func (sm StateMessage) toBytes() []byte {
     return msg
 }
 
-func makeStateMessage(toMove bool, me Trainer, opponent Trainer, RoundResultMsg RoundResultMessage) StateMessage {
-    sm := StateMessage{MyMove: toMove, MyPokemon: make([]PokemonMessage, len(me.pokemon))}
+func makeStateMessage(me Trainer, opponent Trainer, roundResultMsg1, roundResultMsg2 RoundResultMessage) StateMessage {
+    sm := StateMessage{MyPokemon: make([]PokemonMessage, len(me.pokemon))}
     for idx, pokemon := range me.pokemon {
         sm.MyPokemon[idx] = makePokemonMessage(pokemon, true)
     }
     sm.OtherPokemon = makePokemonMessage(opponent.pokemon[0], false)
-    sm.RoundResult = RoundResultMsg
+    sm.Results = []RoundResultMessage{roundResultMsg1, roundResultMsg2}
     return sm
 }
 
