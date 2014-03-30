@@ -334,6 +334,7 @@ var menu = function() {
   simply.text({title: "Welcome to Pokebble!", subtitle: "Long hold the center button to play.", body: ''});
   simply.vibe('short');
   console.log("10 - game.js");
+  simply.off('longClick');
   simply.on('longClick', function(e) {
     console.log("11 - game.js");
     simply.vibe('long');
