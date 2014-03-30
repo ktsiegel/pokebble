@@ -67,7 +67,7 @@ requests.postAttack = function (trainer, move, response) {
 
 
 requests.postSwitch = function (trainer, newpokemon, response){
-  console.log("posted attack " + move);
+  console.log("posted switch " + newpokemon);
   ajax({
     method: 'post',
     url: SERVER + '/battle/switch',
