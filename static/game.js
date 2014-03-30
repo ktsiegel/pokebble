@@ -98,8 +98,8 @@ var handleResponse = function(response){
 
     Pebble.showSimpleNotificationOnPebble(title, message);
   }
-  
-  if(!response.outcome){
+
+  if(response.outcome === "Pending"){
     simply.off('accelTap');
     simply.off('longClick');
     simply.off('singleClick');
