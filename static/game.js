@@ -25,42 +25,78 @@ var handleResponse = function(response){
   console.log("handling response...");
 
   var title = "", message = "";
+  var result1 = data.round_result[0];
+  var result2 = data.round_result[1];
 
-  if(!response.round_result.switch){
-    title = response.round_result.pokemon + " used " + response.round_result.move;
+  if(result1.pokemon1 !== ""){
+    if(!result1.switch){
+      title = result1.pokemon1 + " used " + result1.move;
 
-    if(response.round_result.missed){
-      message = response.round_result.pokemon + "'s attack missed!";
-    } else if(response.round_result.multiplier === 0) {
-      message = "It had no effect!";
-    } else{
-      if(response.round_result.multiplier > 1){
-        message = "It's super effective!\n";
-      } else if(response.round_result.multiplier < 1) {
-        message = "It's not very effective...\n";
+      if(response.round_result.missed){
+        message = result1.pokemon1 + "'s attack missed!";
+      } else if(result1.multiplier === 0) {
+        message = "It had no effect!";
+      } else{
+        if(response.result1.multiplier > 1){
+          message = "It's super effective!\n";
+        } else if(result1.multiplier < 1) {
+          message = "It's not very effective...\n";
+        }
+        message += result1.pokemon2 + " lost " + result1.damage + "HP.";
+
+        var attackTarget = (result1.trainer == trainerId) ? enemy : myParty[0];
+        if(attackTarget.hp === 0){
+          message += "\n" + result1.pokemon2 + "fainted!";
+        }
       }
-      message += response.round_result.target.name + " lost " + response.round_result.damage + "HP.";
-
-      var attackTarget = response.round_result.my_move ? myParty[0] : enemy;
-      if(attackTarget.hp === 0){
-        message += "\n" + attackTarget.name + "fainted!";
-      }
+    } else {
+      message = "Come back, " + response.round_result.pokemon1 + "!\nGo " + response.round_result.pokemon1;
     }
-  } else {
-    message = "Come back, " + response.round_result.pokemon1 + "!\nGo " + response.round_result.pokemon1;
+
+    Pebble.showSimpleNotificationOnPebble(title, message);
+
+    setTimeout(function() {
+      var title = "", message = "";
+
+      if(!result2.switch){
+        title = result2.pokemon1 + " used " + result2.move;
+
+        if(response.round_result.missed){
+          message = result2.pokemon1 + "'s attack missed!";
+        } else if(result2.multiplier === 0) {
+          message = "It had no effect!";
+        } else{
+          if(response.result2.multiplier > 1){
+            message = "It's super effective!\n";
+          } else if(result2.multiplier < 1) {
+            message = "It's not very effective...\n";
+          }
+          message += result2.pokemon2 + " lost " + result2.damage + "HP.";
+
+          var attackTarget = (result2.trainer == trainerId) ? enemy : myParty[0];
+          if(attackTarget.hp === 0){
+            message += "\n" + result2.pokemon2 + "fainted!";
+          }
+        }
+      } else {
+        message = "Come back, " + response.round_result.pokemon1 + "!\nGo " + response.round_result.pokemon1;
+      }
+
+      Pebble.showSimpleNotificationOnPebble(title, message);
+    }, 2000);
   }
 
-  Pebble.showSimpleNotificationOnPebble(title, message);
-
-  if(response.my_move && myParty[0].hp === 0){
+  if(myParty[0].hp === 0){
     party(true);
+  } else {
+    challenge(myParty[0]);
   }
 };
 
 console.log("5 - game.js");
 
 // Challenge screen
-var challenge = function(pokemon) {
+var challenge = function (pokemon) {
   var fightPokemon = myParty.filter(function (el) {
       return el["name"] === pokemon;
   });
