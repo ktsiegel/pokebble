@@ -1,4 +1,4 @@
-/* jshint esnext: true, sub: true*/
+/* jshint sub: true*/
 /* global Pebble */
 
 console.log("0 - game.js");
@@ -101,7 +101,7 @@ var challenge = function(pokemon) {
 
   // Select move
   simply.on('longClick', function(e) {
-    
+
     if (currentPointerLine < bodyText.split('\n').length - 1) {
       var move = bodyText.split('\n')[currentPointerLine];
       requests.postAttack(trainerId, currentPointerLine - 4, handleResponse, handleResponse);
@@ -164,7 +164,7 @@ console.log("6 - game.js");
 //            in a battle, and any pokemon can be selected.
 //           if inBattle is True, then trainer is currently in a
 //            battle, and only usable Pokemon (>0 hp) can be selected.
-var party = function(inBattle = false) {
+var party = function(inBattle) {
   var liveParty = "";
   var deadParty = "";
   var livePartyCount = 0;
@@ -261,7 +261,7 @@ var menu = function() {
   simply.on('longClick', function(e) {
     simply.vibe('long');
     requests.postBattleStart(trainerId, myParty, handleResponse, handleResponse);
-    party();
+    party(false);
   });
 };
 
