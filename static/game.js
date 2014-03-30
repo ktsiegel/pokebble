@@ -130,13 +130,11 @@ var challenge = function (fightPokemon) {
 
   // Select move
   simply.on('longClick', function(e) {
-    if (response.my_move) {
-      if (currentPointerLine < challengeState.split('\n').length - 1) {
-        var move = challengeState.split('\n')[currentPointerLine];
-        requests.postAttack(trainerId, currentPointerLine - 4, handleResponse, handleResponse);
-      } else { // switch pokemon
-        party(true);
-      }
+    if (currentPointerLine < challengeState.split('\n').length - 1) {
+      var move = challengeState.split('\n')[currentPointerLine];
+      requests.postAttack(trainerId, currentPointerLine - 4, handleResponse, handleResponse);
+    } else { // switch pokemon
+      party(true);
     }
   });
 };
