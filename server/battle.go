@@ -122,6 +122,7 @@ func (battle *Battle) start(trainer1 *Trainer, trainer2 *Trainer) {
 
     var roundResultMsg1 RoundResultMessage
     var roundResultMsg2 RoundResultMessage
+    finished := false
 
     roundNum := 0
     for {
@@ -129,31 +130,33 @@ func (battle *Battle) start(trainer1 *Trainer, trainer2 *Trainer) {
         roundNum += 1
 
         state1, state2 := battle.getStates(roundResultMsg1, roundResultMsg2)
+
+        // check if the match is over
+        if battle.conn2.trainer.isWiped() {
+            log.Println("Winner:", trainer1.name)
+            state1.Outcome = "Won"
+            state2.Outcome = "Lost"
+            finished = true
+        } else if battle.conn1.trainer.isWiped() {
+            log.Println("Winner:", trainer2.name)
+            state1.Outcome = "Lost"
+            state2.Outcome = "Won"
+            finished = true
+        } else {
+            state1.Outcome = "Pending"
+            state2.Outcome = "Pending"
+        }
+
         log.Println("Sending states")
         trainer1.outbox <- state1.toBytes()
         trainer2.outbox <- state2.toBytes()
+        if finished {
+            break
+        }
+
         roundResultMsg1 = RoundResultMessage{}
         roundResultMsg2 = RoundResultMessage{}
 
-        // check if the match is over
-        if battle.conn1.trainer.isWiped() && battle.conn2.trainer.isWiped() {
-            log.Println("TIE")
-            trainer1.outbox <- makeBattleResult(2).toBytes()
-            trainer2.outbox <- makeBattleResult(2).toBytes()
-            break
-        }
-        if battle.conn2.trainer.isWiped() {
-            log.Println("Winner:", trainer1.name)
-            trainer1.outbox <- makeBattleResult(0).toBytes()
-            trainer2.outbox <- makeBattleResult(1).toBytes()
-            break
-        }
-        if battle.conn1.trainer.isWiped() {
-            log.Println("Winner:", trainer2.name)
-            trainer1.outbox <- makeBattleResult(1).toBytes()
-            trainer2.outbox <- makeBattleResult(0).toBytes()
-            break
-        }
         // check if one of the pokemon is fainted
         if trainer1.pokemon[0].state.health == 0 {
             for {
