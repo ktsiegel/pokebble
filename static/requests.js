@@ -16,7 +16,7 @@ requests.getResponse = function (trainer, callback){
     async: false,
     cache: false
   }, function(data){
-    console.log("received response: " + data.toString());
+    console.log("received response: " + JSON.stringify(data));
     callback(data);
   });
 };
@@ -39,7 +39,7 @@ requests.postBattleStart = function (trainer, party, battleStart) {
         "lng": pos.coords.latitude
       }
     }, function (data) {
-      console.log("received response: " + data.toString());
+      console.log("received response: " + JSON.stringify(data));
       battleStart(data);
     });
   });
@@ -60,7 +60,7 @@ requests.postAttack = function (trainer, move, response) {
       "move": move
     }
   }, function (data) {
-    console.log("received response: " + data.toString());
+    console.log("received response: " + JSON.stringify(data));
     response(data);
   });
 };
@@ -79,7 +79,7 @@ requests.postSwitch = function (trainer, newpokemon, response){
       "pokemon": newpokemon
     }
   }, function (data) {
-    console.log("received response: " + data.toString());
+    console.log("received response: " + JSON.stringify(data));
     response(data);
   });
 };

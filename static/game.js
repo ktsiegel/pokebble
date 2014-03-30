@@ -32,12 +32,12 @@ var handleResponse = function(response){
     if(!result1.switch){
       title = result1.pokemon1 + " used " + result1.move;
 
-      if(response.round_result.missed){
+      if(result1.missed){
         message = result1.pokemon1 + "'s attack missed!";
       } else if(result1.multiplier === 0) {
         message = "It had no effect!";
       } else{
-        if(response.result1.multiplier > 1){
+        if(result1.multiplier > 1){
           message = "It's super effective!\n";
         } else if(result1.multiplier < 1) {
           message = "It's not very effective...\n";
@@ -50,40 +50,41 @@ var handleResponse = function(response){
         }
       }
     } else {
-      message = "Come back, " + response.round_result.pokemon1 + "!\nGo " + response.round_result.pokemon1;
+      message = "Come back, " + result1.pokemon1 + "!\nGo " + result1.pokemon1;
     }
 
     Pebble.showSimpleNotificationOnPebble(title, message);
 
-    setTimeout(function() {
-      var title = "", message = "";
+    // setTimeout(function() {
+     title = "";
+     message = "";
 
       if(!result2.switch){
         title = result2.pokemon1 + " used " + result2.move;
 
-        if(response.round_result.missed){
+        if(result2.missed){
           message = result2.pokemon1 + "'s attack missed!";
         } else if(result2.multiplier === 0) {
           message = "It had no effect!";
         } else{
-          if(response.result2.multiplier > 1){
+          if(result2.multiplier > 1){
             message = "It's super effective!\n";
           } else if(result2.multiplier < 1) {
             message = "It's not very effective...\n";
           }
           message += result2.pokemon2 + " lost " + result2.damage + "HP.";
 
-          var attackTarget = (result2.trainer == trainerId) ? enemy : myParty[0];
-          if(attackTarget.hp === 0){
+          var attackTarget2 = (result2.trainer == trainerId) ? enemy : myParty[0];
+          if(attackTarget2.hp === 0){
             message += "\n" + result2.pokemon2 + "fainted!";
           }
         }
       } else {
-        message = "Come back, " + response.round_result.pokemon1 + "!\nGo " + response.round_result.pokemon1;
+        message = "Come back, " + result2.pokemon1 + "!\nGo " + result2.pokemon1;
       }
 
       Pebble.showSimpleNotificationOnPebble(title, message);
-    }, 2000);
+    // }, 2000);
   }
 
   if(myParty[0].hp === 0){
