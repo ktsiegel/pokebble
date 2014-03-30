@@ -11,7 +11,7 @@
 
         var pokeslots = [];
 
-        var allPokemon = ["placeholder", 
+        var allPokemon = ["placeholder",
                 "Bulbasaur",
                 "Ivysaur",
                 "Venusaur",
@@ -184,7 +184,7 @@
             $("#partySubmit").click(function() {
                 var pokehash = [];
                 for (var i=0; i<pokeslots.length; i++) {
-                    var id = allPokemon.indexOf(pokeslots[i]) + 1;
+                    var id = allPokemon.indexOf(pokeslots[i]);
                     var level = parseInt(Math.random()*30+70);
                     pokehash.push({'id':id.toString(), 'level':level});
                 }
@@ -452,7 +452,7 @@
                     Save Party</button></p>
                     <p class="lead">
                         <div class='row submit-row'>
-                            <input class="form-control col-xs-3 col-xs-offset-2" id="pokemonSearch" placeholder="Pokemon name">	
+                            <input class="form-control col-xs-3 col-xs-offset-2" id="pokemonSearch" placeholder="Pokemon name">
                             <button class="btn submit-button" id="pokemonSubmit">Add to Party</button>
                         </div>
                     </p>
