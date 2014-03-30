@@ -96,10 +96,8 @@ var handleResponse = function(response){
 console.log("5 - game.js");
 
 // Challenge screen
-var challenge = function (pokemon) {
-  var fightPokemon = myParty.filter(function (el) {
-      return el["name"] === pokemon;
-  });
+var challenge = function (fightpokemon) {
+
   var challengeState = "Enemy " + enemy["name"] +
     "\n (hp:" + enemy["hp"] + "/" + enemy["maxhp"] + ")\n" +
     "My " + fightPokemon["name"] +
