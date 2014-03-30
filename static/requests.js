@@ -28,7 +28,7 @@ requests.postBattleStart = function (trainer, party, battleStart) {
     console.log("posted battle request for party " + JSON.stringify(party));
     ajax({
       method: 'post',
-      url: SERVER + '/battle/start/',
+      url: SERVER + '/battle/start',
       type: 'json',
       async: false,
       cache: false,
@@ -51,7 +51,7 @@ requests.postAttack = function (trainer, move, response) {
   console.log("posted attack " + move);
   ajax({
     method: 'post',
-    url: SERVER + '/battle/attack/',
+    url: SERVER + '/battle/attack',
     type: 'json',
     async: false,
     cache: false,
@@ -70,7 +70,7 @@ requests.postSwitch = function (trainer, newpokemon, response){
   console.log("posted attack " + move);
   ajax({
     method: 'post',
-    url: SERVER + '/battle/switch/',
+    url: SERVER + '/battle/switch',
     type: 'json',
     async: false,
     cache: false,

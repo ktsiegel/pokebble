@@ -3,7 +3,7 @@ function shuffle(o){ //v1.0
     return o;
 };
 
-ws = new WebSocket("ws:localhost:10914/battle")
+ws = new WebSocket("ws:jinpan.mit.edu:10915/battle")
 
 hash = window.location.hash;
 var trainer = hash.substring(1, hash.length);
