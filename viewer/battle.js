@@ -29,7 +29,7 @@ $(document).on("ready", function(){
 
 			$(".opponent div.meter span").animate({"width":hpmin/hpmax*100+"%"}, 500);
 			$(".opponent span.health").html(hpmin+"/"+hpmax);
-		
+
 	}
 
 	attackTrainerPokemon = function(hpmin, hpmax){
@@ -44,7 +44,7 @@ $(document).on("ready", function(){
 
 			$(".user div.meter span").animate({"width":hpmin/hpmax*100+"%"}, 500);
 			$(".user span.health").html(hpmin+"/"+hpmax);
-		
+
 	}
 
 	returnOpponentPokemon = function(){
@@ -65,14 +65,14 @@ $(document).on("ready", function(){
 
     conn.onopen = function(e) {
         conn.send(JSON.stringify(msg));
-    }
-    
+    };
+
     conn.onmessage = function(e) {
         console.log(e.data);
-        data = JSON.parse(e.data)
+        data = JSON.parse(e.data);
         var result1 = data.round_result[0];
         var result2 = data.round_result[1];
-        if (result1.pokemon1 == "") { // draw pokemon as they are
+        if (result1.pokemon1 === "") { // draw pokemon as they are
             var my_pokemon = data.pokemon[0];
             var opp_pokemon = data.other_pokemon;
             changeTrainerPokemon(my_pokemon.name, my_pokemon.hp, my_pokemon.maxhp, my_pokemon.level);
@@ -83,7 +83,7 @@ $(document).on("ready", function(){
                     var my_pokemon = data.pokemon[0]; // new pokemon
                     if (!result2.switch && result2.pokemon1 != ""){
                         // I switched but they didn't switch
-                        var hp = my_pokemon.hp + result2.dmg
+                        var hp = my_pokemon.hp + result2.dmg;
                         changeTrainerPokemon(my_pokemon.name, hp, my_pokemon.maxhp, my_pokemon.level);
                         $('#activity-feed').prepend("<p><b>You:</b> Go " + result1.pokemon2 + "!</p>");
                     } else {
@@ -107,8 +107,8 @@ $(document).on("ready", function(){
                     attackOpponentPokemon(opp_pokemon.hp, opp_pokemon.maxhp);
 
                     $('#activity-feed').prepend("<p><b>You:</b> " + result1.pokemon1 + ", use " + result1.move + "!</p>");
-                    
-                    
+
+
                 } else { // their turn
                     var my_pokemon = data.pokemon[0];
                     attackTrainerPokemon(my_pokemon.hp, my_pokemon.maxhp);
@@ -179,5 +179,11 @@ $(document).on("ready", function(){
                 }
             }
         }, 2000);
-    }
+
+				setTimeout(function() {
+					if(data.outcome !== "Pending"){
+						$('#activity-feed').prepend("<p>Game over! You " + data.outcome.toLowerCase() + "!</p>");
+					}
+				}, 4000);
+    };
 });
