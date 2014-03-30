@@ -10,54 +10,50 @@
     <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 	<script src="{{ url_for('static', filename='bootstrap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='configure.js') }}"></script>
-    
-    
 </head>
 
 <body>
-<div class="site-wrapper">
-
-      <div class="site-wrapper-inner">
-
-        <div class="cover-container">
-
-          <div class="inner cover" style="font-family:Lucida Console">
-            <h1 class="cover-heading row row-pokeslots">
-                <div class='col-xs-2 pokebox'>
-                    <div class='pokeslot' id='pokeslot-1'></div>
+    <div class="site-wrapper">
+        <div class="site-wrapper-inner">
+            <div class="cover-container">
+                <div class="inner cover">
+                    <h1 class="cover-heading">
+                        <div class="row">
+                            <div class='col-xs-6 pokebox'>
+                                <div class='pokeslot' id='pokeslot-1'></div>
+                            </div>
+                            <div class='col-xs-6 pokebox'>
+                                <div class='pokeslot' id='pokeslot-2'></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class='col-xs-6 pokebox'>
+                                <div class='pokeslot' id='pokeslot-3'></div>
+                            </div>
+                            <div class='col-xs-6 pokebox'>
+                                <div class='pokeslot' id='pokeslot-4'></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class='col-xs-6 pokebox'>
+                                <div class='pokeslot' id='pokeslot-5'></div>
+                            </div>
+                            <div class='col-xs-6 pokebox'>
+                                <div class='pokeslot' id='pokeslot-6'></div>
+                            </div>
+                        </div>
+                    </h1>
+                    <p class="lead">Select the Pokemon in your party. <button class="btn btn-success" id="partySubmit">
+                    Save</button></p>
+                    <p class="lead">
+                        <div class='row submit-row'>
+                            <input class="form-control col-xs-3 col-xs-offset-2" id="pokemonSearch" placeholder="Pokemon name">	
+                            <button class="btn submit-button" id="pokemonSubmit">Submit</button>
+                        </div>
+                    </p>
                 </div>
-                <div class='col-xs-2 pokebox'>
-                    <div class='pokeslot' id='pokeslot-2'></div>
-                </div>
-                <div class='col-xs-2 pokebox'>
-                    <div class='pokeslot' id='pokeslot-3'></div>
-                </div>
-                <div class='col-xs-2 pokebox'>
-                    <div class='pokeslot' id='pokeslot-4'></div>
-                </div>
-                <div class='col-xs-2 pokebox'>
-                    <div class='pokeslot' id='pokeslot-5'></div>
-                </div>
-                <div class='col-xs-2 pokebox'>
-                    <div class='pokeslot' id='pokeslot-6'></div>
-                </div>
-            </h1>
-            <p class="lead">Select the Pokemon in your party.</p>
-            <p class="lead">
-              	<form role="form">
-              		<input type="pokemonName" class="form-control" id="pokemonSearch" placeholder="Pokemon name">
-				</form>		
-
-            </p>
-          </div>
-
+            </div>
         </div>
-
-      </div>
-
     </div>
-
-    
-
 </body>
 </html>

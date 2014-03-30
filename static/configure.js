@@ -1,7 +1,6 @@
-var pokeslots = [null, null, null, null, null, null];
+var pokeslots = [];
 
-$(document).ready($(function() {
-    var allPokemon = ["Bulbasaur", 
+var allPokemon = ["Bulbasaur", 
         "Ivysaur", 
         "Venusaur", 
         "Charmander", 
@@ -152,8 +151,35 @@ $(document).ready($(function() {
         "Dragonite", 
         "Mewtwo", 
         "Mew"];
-    $( "#pokemonSearch" ).autocomplete({
+
+$(document).ready($(function() {
+    $("#pokemonSearch").autocomplete({
         source: allPokemon
     });
+
+    $("#pokemonSubmit").click(function( ) {
+        if (pokeslots.length < 6) {
+            var pokemon = $('#pokemonSearch').val();
+            if ($.inArray(pokemon, allPokemon)) {
+                pokeslots.push(pokemon);
+                var pokeslot = "#pokeslot-" + pokeslots.length.toString();
+                $(pokeslot).text(pokemon);
+            } 
+        }
+        $('#pokemonSearch').val("");
+    });
+
+    $("#partySubmit").click(function() {
+        var pokehash = [];
+        for (var i=0; i<pokeslots.length; i++) {
+            var id = allPokemon.indexOf(pokeslots[i]) + 1;
+            var level = parseInt(Math.random()*30+70);
+            pokehash.push({'id':id, 'level':level})
+
+            // make request
+
+        }
+        window.location.href = "http://localhost:5000/saved";
+    })
 }))
 
