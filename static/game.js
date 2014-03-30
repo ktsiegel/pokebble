@@ -198,10 +198,10 @@ var visibleBodyText = function(text, currLineNumber, offset) {
 
   // Applicable if the 4th to last line is centered
   if (currLineNumber >= maxLine - 4 + offset) {
-    start = max(maxLine - 7 - offset,0);
+    start = Math.max(maxLine - 7 - offset,0);
     end = maxLine - offset;
   } else if (currLineNumber > 3) {
-    start = max(currLineNumber - 3 - offset,0);
+    start = Math.max(currLineNumber - 3 - offset,0);
     end = currLineNumber + 4 - offset;
   }
 
