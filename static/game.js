@@ -96,7 +96,7 @@ var handleResponse = function(response){
 console.log("5 - game.js");
 
 // Challenge screen
-var challenge = function (fightpokemon) {
+var challenge = function (fightPokemon) {
 
   var challengeState = "Enemy " + enemy["name"] +
     "\n (hp:" + enemy["hp"] + "/" + enemy["maxhp"] + ")\n" +
