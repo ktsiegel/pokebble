@@ -293,11 +293,19 @@ var party = function(inBattle) {
   // Select pokemon
   simply.off('longClick');
   simply.on('longClick', function(e) {
-    var pokemon = bodyText.split('\n')[currentPointerLine];
+    var pokemon = 0;
+
+    for(var i = 0; i < myParty.length; i++){
+      if(myParty[i].name === bodyText.split('\n')[currentPointerLine]){
+        pokemon = i;
+      }
+    }
+
     if (inBattle) {
       // change to challenge screen
-      challenge(pokemon);
+      requests.postSwitch(trainerId, pokemon, handleResponse);
     }
+
     else {
       // change to stat screen of that pokemon
       // stats
