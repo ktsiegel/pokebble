@@ -25,45 +25,91 @@ var handleResponse = function(response){
   console.log("handling response...");
 
   var title = "", message = "";
+  var result1 = response.round_result[0];
+  var result2 = response.round_result[1];
+    if(result1.pokemon1 !== ""){
+      if(!result1.switch){
+        title = result1.pokemon1 + " used " + result1.move;
 
-  if(!response.round_result.switch){
-    title = response.round_result.pokemon + " used " + response.round_result.move;
+        if(result1.missed){
+          message = result1.pokemon1 + "'s attack missed!";
+        } else if(result1.multiplier === 0) {
+          message = "It had no effect!";
+        } else{
+          if(result1.multiplier > 1){
+            message = "It's super effective!\n";
+          } else if(result1.multiplier < 1) {
+            message = "It's not very effective...\n";
+          }
+          message += result1.pokemon2 + " lost " + result1.damage + "HP.";
 
-    if(response.round_result.missed){
-      message = response.round_result.pokemon + "'s attack missed!";
-    } else if(response.round_result.multiplier === 0) {
-      message = "It had no effect!";
-    } else{
-      if(response.round_result.multiplier > 1){
-        message = "It's super effective!\n";
-      } else if(response.round_result.multiplier < 1) {
-        message = "It's not very effective...\n";
+          var attackTarget = (result1.trainer == trainerId) ? enemy : myParty[0];
+          if(attackTarget.hp === 0){
+            message += "\n" + result1.pokemon2 + " fainted!";
+          }
+        }
+      } else {
+        message = "Come back, " + result1.pokemon1 + "!\nGo " + result1.pokemon1;
       }
-      message += response.round_result.target.name + " lost " + response.round_result.damage + "HP.";
 
-      var attackTarget = response.round_result.my_move ? myParty[0] : enemy;
-      if(attackTarget.hp === 0){
-        message += "\n" + attackTarget.name + "fainted!";
-      }
-    }
-  } else {
-    message = "Come back, " + response.round_result.pokemon1 + "!\nGo " + response.round_result.pokemon1;
+      Pebble.showSimpleNotificationOnPebble(title, message);
+
+      title = "";
+      message = "";
+
+        if(!result2.switch){
+          title = result2.pokemon1 + " used " + result2.move;
+
+          if(result2.missed){
+            message = result2.pokemon1 + "'s attack missed!";
+          } else if(result2.multiplier === 0) {
+            message = "It had no effect!";
+          } else{
+            if(result2.multiplier > 1){
+              message = "It's super effective!\n";
+            } else if(result2.multiplier < 1) {
+              message = "It's not very effective...\n";
+            }
+            message += result2.pokemon2 + " lost " + result2.damage + "HP.";
+
+            var attackTarget2 = (result2.trainer == trainerId) ? enemy : myParty[0];
+            if(attackTarget2.hp === 0){
+              message += "\n" + result2.pokemon2 + " fainted!";
+            }
+          }
+        } else {
+          message = "Come back, " + result2.pokemon1 + "!\nGo " + result2.pokemon1;
+        }
+
+        Pebble.showSimpleNotificationOnPebble(title, message);
+
+        if(response.outcome === "WON") {
+          Pebble.showSimpleNotificationOnPebble("You win!", "Congratulations! You're a Pokemon Master!");
+          menu();
+        } else if(response.outcome === "LOST"){
+          Pebble.showSimpleNotificationOnPebble("You lost :(", "Better luck next time!");
+          menu();
+        }
   }
 
-  Pebble.showSimpleNotificationOnPebble(title, message);
+  simply.off('accelTap');
+  simply.off('longClick');
+  simply.off('singleClick');
 
-  if(response.my_move && myParty[0].hp === 0){
+  if(myParty[0].hp === 0){
+    console.log("thinks i'm dead");
     party(true);
+  } else {
+    console.log("Challenging with active pkmn " + JSON.stringify(myParty[0]));
+    challenge(myParty[0]);
   }
 };
 
 console.log("5 - game.js");
 
 // Challenge screen
-var challenge = function(pokemon) {
-  var fightPokemon = myParty.filter(function (el) {
-      return el["name"] === pokemon;
-  });
+var challenge = function (fightPokemon) {
+
   var challengeState = "Enemy " + enemy["name"] +
     "\n (hp:" + enemy["hp"] + "/" + enemy["maxhp"] + ")\n" +
     "My " + fightPokemon["name"] +
@@ -80,14 +126,20 @@ var challenge = function(pokemon) {
   }
   challengeState += "Switch Pokemon";
 
+
   // scrolling
   var currentPointerLine = 4;
   simply.text({ title: '', subtitle: '', body: visibleBodyText(challengeState, currentPointerLine, 1) });
+  console.log("wrote display for battle");
+
+  simply.off('singleClick');
   simply.on('singleClick', function(e) {
     if (e.button === 'up' && currentPointerLine > 4) {
+      console.log("currentpointerline decreased");
       currentPointerLine -= 1;
     } else if (e.button === 'down' && currentPointerLine < 4 + moves.length) {
-        currentPointerLine += 1;
+      console.log("currentpointerline increased");
+      currentPointerLine += 1;
     }
     // Update body text
     challengeState = partyScrollUpdate(challengeState, currentPointerLine);
@@ -95,14 +147,14 @@ var challenge = function(pokemon) {
   });
 
   // Select move
+  simply.off('longClick');
   simply.on('longClick', function(e) {
-    if (response.my_move) {
-      if (currentPointerLine < challengeState.split('\n').length - 1) {
-        var move = challengeState.split('\n')[currentPointerLine];
-        requests.postAttack(trainerId, currentPointerLine - 4, handleResponse, handleResponse);
-      } else { // switch pokemon
-        party(true);
-      }
+    console.log("long-click fired in battle");
+    if (currentPointerLine < challengeState.split('\n').length - 1) {
+      var move = challengeState.split('\n')[currentPointerLine];
+      requests.postAttack(trainerId, currentPointerLine - 4, handleResponse, handleResponse);
+    } else { // switch pokemon
+      party(true);
     }
   });
 };
@@ -204,6 +256,7 @@ var party = function(inBattle) {
   var currentPointerLine = 1; // tracks where the pokemon selector (">") is
   simply.text({ title: '', subtitle: '', body: visibleBodyText(bodyText, currentPointerLine, 0) });
   console.log("19 - game.js");
+  simply.off('singleClick');
   simply.on('singleClick', function(e) {
       if (e.button === 'up') {
         // Can only scroll among pokemon, so handle skipping the blank line
@@ -232,6 +285,7 @@ var party = function(inBattle) {
   });
 
   // Select pokemon
+  simply.off('longClick');
   simply.on('longClick', function(e) {
     var pokemon = bodyText.split('\n')[currentPointerLine];
     if (inBattle) {
@@ -244,6 +298,7 @@ var party = function(inBattle) {
     }
   });
 
+  simply.off('accelTap');
   simply.on('accelTap', function(e) {
     // Test if a fist bump: on x-axis
     if (e.axis === 'x') {

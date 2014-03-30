@@ -16,21 +16,19 @@ requests.getResponse = function (trainer, callback){
     async: false,
     cache: false
   }, function(data){
-    console.log("received response: " + data.toString());
+    console.log("received response: " + JSON.stringify(data));
     callback(data);
   });
 };
 
 // Start a battle for the given trainer and party and pass the JSON response
-// data to the battleStart callback. When the opponent has made their move,
-// the JSON response data is passed to the nextTurn callback.
-requests.postBattleStart = function (trainer, party, battleStart, nextTurn) {
+// data to the battleStart callback.
+requests.postBattleStart = function (trainer, party, battleStart) {
   navigator.geolocation.getCurrentPosition(function(pos) {
-    console.log(party);
     console.log("posted battle request for party " + JSON.stringify(party));
     ajax({
       method: 'post',
-      url: SERVER + '/battle/start/',
+      url: SERVER + '/battle/start',
       type: 'json',
       async: false,
       cache: false,
@@ -41,20 +39,19 @@ requests.postBattleStart = function (trainer, party, battleStart, nextTurn) {
         "lng": pos.coords.latitude
       }
     }, function (data) {
-      console.log("received response: " + data.toString());
+      console.log("received response: " + JSON.stringify(data));
       battleStart(data);
-      getResponse(trainer, nextTurn);
     });
   });
 };
 
 // Send an attack from the active pokemon of the given trainer and pass the
-// JSON response to the response callback. When the opponent
-requests.postAttack = function (trainer, move, response, nextTurn) {
+// JSON response to the response callback.
+requests.postAttack = function (trainer, move, response) {
   console.log("posted attack " + move);
   ajax({
     method: 'post',
-    url: SERVER + '/battle/attack/',
+    url: SERVER + '/battle/attack',
     type: 'json',
     async: false,
     cache: false,
@@ -63,18 +60,17 @@ requests.postAttack = function (trainer, move, response, nextTurn) {
       "move": move
     }
   }, function (data) {
-    console.log("received response: " + data.toString());
+    console.log("received response: " + JSON.stringify(data));
     response(data);
-    getResponse(trainer, nextTurn);
   });
 };
 
 
-requests.postSwitch = function (trainer, newpokemon, response, nextTurn){
+requests.postSwitch = function (trainer, newpokemon, response){
   console.log("posted attack " + move);
   ajax({
     method: 'post',
-    url: SERVER + '/battle/switch/',
+    url: SERVER + '/battle/switch',
     type: 'json',
     async: false,
     cache: false,
@@ -83,9 +79,8 @@ requests.postSwitch = function (trainer, newpokemon, response, nextTurn){
       "pokemon": newpokemon
     }
   }, function (data) {
-    console.log("received response: " + data.toString());
+    console.log("received response: " + JSON.stringify(data));
     response(data);
-    getResponse(trainer, nextTurn);
   });
 };
 

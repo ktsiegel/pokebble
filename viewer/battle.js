@@ -55,7 +55,7 @@ $(document).on("ready", function(){
 		$("div.user.pokemon").html("");
 	}
 
-    var conn = new WebSocket("ws:localhost:10914/battle");
+    var conn = new WebSocket("ws:jinpan.mit.edu:10915/battle");
     var hash = window.location.hash;
     var trainer = hash.substring(1, hash.length);
     var msg = {

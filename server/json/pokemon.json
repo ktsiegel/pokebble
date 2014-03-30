@@ -249,6 +249,16 @@
             "acid"
         ]
     },
+    "25": {
+        "name": "Pikachu",
+        "attack": 55,
+        "defense": 40,
+        "type": "electric",
+        "moves": [
+            "thundershock",
+            "thunderbolt"
+        ]
+    },
     "26": {
         "name": "Raichu",
         "attack": 90,
@@ -256,7 +266,8 @@
         "type": "electric",
         "moves": [
             "thundershock",
-            "thunderbolt"
+            "thunderbolt",
+            "thunder"
         ]
     },
     "27": {
