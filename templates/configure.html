@@ -185,7 +185,7 @@
                 for (var i=0; i<pokeslots.length; i++) {
                     var id = allPokemon.indexOf(pokeslots[i]) + 1;
                     var level = parseInt(Math.random()*30+70);
-                    pokehash.push({'id':id, 'level':level});
+                    pokehash.push({'id':id.toString(), 'level':level});
                 }
 
                 var options = {
