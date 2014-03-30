@@ -108,11 +108,11 @@ func (p1 Pokemon) attack(p2 Pokemon, move_idx int) (X float64, dmg uint) {
 
 
 func calcEffectiveness(moveType *Type, pokemonType *Type) float64 {
-    if moveType.strongVS[pokemonType] {
+    if _, ok := moveType.strongVS[pokemonType]; ok {
         return 2.0
-    } else if moveType.weakVS[pokemonType] {
+    } else if _, ok := moveType.weakVS[pokemonType]; ok {
         return 0.5
-    } else if moveType.ineffectiveVS[pokemonType] {
+    } else if _, ok := moveType.ineffectiveVS[pokemonType]; ok {
         return 0.0
     } else {
         return 1.0

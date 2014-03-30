@@ -18,7 +18,7 @@ var (
     pokemon_fp = flag.String("pokemon_fp", "json/pokemon.json", "path to pokemon data")
 
     raw_types = make(map[string] map[string] float64)
-    types = make(map[string] Type)
+    types = make(map[string] *Type)
     moves = make(map[string] *PokemonMove)
     base_pokemon = make(map[string] *BasePokemon)
 
@@ -30,21 +30,21 @@ func parseFiles() {
     json.NewDecoder(types_file).Decode(&raw_types)
 
     for key := range raw_types {
-        types[key] = Type{name: key,
-                          strongVS: make(map[*Type] bool),
-                          weakVS: make(map[*Type] bool),
-                          ineffectiveVS: make(map[*Type] bool)}
+        types[key] = &Type{name: key,
+                           strongVS: make(map[*Type] bool),
+                           weakVS: make(map[*Type] bool),
+                           ineffectiveVS: make(map[*Type] bool)}
     }
     for key, val := range raw_types {
         myType := types[key]
         for name, score := range val {
             otherType := types[name]
             if score == 2.0 {
-                myType.strongVS[&otherType] = true
+                myType.strongVS[otherType] = true
             } else if score == 0.5 {
-                myType.weakVS[&otherType] = true
+                myType.weakVS[otherType] = true
             } else if score == 0.0 {
-                myType.ineffectiveVS[&otherType] = true
+                myType.ineffectiveVS[otherType] = true
             }
         }
     }
@@ -53,7 +53,7 @@ func parseFiles() {
     json.NewDecoder(moves_file).Decode(&moves)
     for _, move := range moves {
         moveType := types[move.TypeString]
-        move.moveType = &moveType
+        move.moveType = moveType
     }
 
     pokemon_file, _ := os.OpenFile(*pokemon_fp, os.O_RDONLY, 0664)
@@ -61,7 +61,7 @@ func parseFiles() {
     for id, base := range base_pokemon {
         base.id = id
         pokemonType := types[base.TypeString]
-        base.pokemonType = &pokemonType
+        base.pokemonType = pokemonType
     }
 }
 
