@@ -124,7 +124,7 @@ var challenge = function (fightPokemon) {
     }
     challengeState += moves[i]["name"] + "\n";
   }
-  challengeState += "Switch Pokemon";
+  challengeState += "Switch Pokemon\n";
 
 
   // scrolling
