@@ -171,6 +171,10 @@ var partyScrollUpdate = function(text, currLineNumber) {
 var visibleBodyText = function(text, currLineNumber, offset) {
   var maxLine = text.split('\n').length;
 
+  if (maxLine <= 7) {
+    console.log("outputted as whole text: " + text);
+    return text;
+  }
   // Applicable if currLineNumber <= 3
   // i.e. line number 3 is centered
   var start = 0;
@@ -178,14 +182,16 @@ var visibleBodyText = function(text, currLineNumber, offset) {
 
   // Applicable if the 4th to last line is centered
   if (currLineNumber >= maxLine - 4 + offset) {
-    start = maxLine - 7 - offset;
+    start = max(maxLine - 7 - offset,0);
     end = maxLine - offset;
   } else if (currLineNumber > 3) {
-    start = currLineNumber - 3 - offset;
+    start = max(currLineNumber - 3 - offset,0);
     end = currLineNumber + 4 - offset;
   }
 
-  return text.split('\n').slice(start,end).join('\n');
+  updatedText = text.split('\n').slice(start,end).join('\n');
+  console.log("text subsection: " + updatedText);
+  return updatedText;
 };
 
 console.log("6 - game.js");
