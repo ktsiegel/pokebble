@@ -11,7 +11,8 @@
 
         var pokeslots = [];
 
-        var allPokemon = ["Bulbasaur",
+        var allPokemon = ["placeholder", 
+                "Bulbasaur",
                 "Ivysaur",
                 "Venusaur",
                 "Charmander",
@@ -165,7 +166,7 @@
 
         $(document).ready($(function() {
             $("#pokemonSearch").autocomplete({
-                source: allPokemon
+                source: allPokemon.slice(1,allPokemon.length)
             });
 
             $("#pokemonSubmit").click(function( ) {
