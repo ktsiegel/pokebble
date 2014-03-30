@@ -1,4 +1,4 @@
-/* jshint esnext: true, sub: true*/
+/* jshint sub: true*/
 /* global Pebble */
 
 var SERVER = 'http://jinpan.mit.edu:10916';
@@ -8,13 +8,17 @@ var requests = {};
 // Perform a standard GET request for the given trainer and pass
 // the JSON response data to the given callback
 requests.getResponse = function (trainer, callback){
+  console.log("get request sent");
   ajax({
     method: 'get',
     url: SERVER + '/battle?trainer=' + trainer,
     type: 'json',
     async: false,
     cache: false
-  }, callback(data));
+  }, function(data){
+    console.log("received response: " + data.toString());
+    callback(data);
+  });
 };
 
 // Start a battle for the given trainer and party and pass the JSON response
@@ -22,6 +26,7 @@ requests.getResponse = function (trainer, callback){
 // the JSON response data is passed to the nextTurn callback.
 requests.postBattleStart = function (trainer, party, battleStart, nextTurn) {
   navigator.geolocation.getCurrentPosition(function(pos) {
+    console.log("posted battle request for party " + JSON.stringify(party));
     ajax({
       method: 'post',
       url: SERVER + '/battle/start/',
@@ -35,6 +40,7 @@ requests.postBattleStart = function (trainer, party, battleStart, nextTurn) {
         "lng": pos.coords.latitude
       }
     }, function (data) {
+      console.log("received response: " + data.toString());
       battleStart(data);
       getResponse(trainer, nextTurn);
     });
@@ -44,6 +50,7 @@ requests.postBattleStart = function (trainer, party, battleStart, nextTurn) {
 // Send an attack from the active pokemon of the given trainer and pass the
 // JSON response to the response callback. When the opponent
 requests.postAttack = function (trainer, move, response, nextTurn) {
+  console.log("posted attack " + move);
   ajax({
     method: 'post',
     url: SERVER + '/battle/attack/',
@@ -55,6 +62,7 @@ requests.postAttack = function (trainer, move, response, nextTurn) {
       "move": move
     }
   }, function (data) {
+    console.log("received response: " + data.toString());
     response(data);
     getResponse(trainer, nextTurn);
   });
@@ -62,6 +70,7 @@ requests.postAttack = function (trainer, move, response, nextTurn) {
 
 
 requests.postSwitch = function (trainer, newpokemon, response, nextTurn){
+  console.log("posted attack " + move);
   ajax({
     method: 'post',
     url: SERVER + '/battle/switch/',
@@ -73,6 +82,7 @@ requests.postSwitch = function (trainer, newpokemon, response, nextTurn){
       "pokemon": newpokemon
     }
   }, function (data) {
+    console.log("received response: " + data.toString());
     response(data);
     getResponse(trainer, nextTurn);
   });
