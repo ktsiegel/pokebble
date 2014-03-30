@@ -1,0 +1,24 @@
+.pokeslot {
+	height:100%;
+	width:100%;
+	border: 1px white solid;
+}
+
+.pokebox {
+	height:100px;
+	padding:10px;
+	border: 1px white solid;
+}
+
+.row-pokeslots {
+	margin-bottom:30px;
+}
+
+#pokemonSearch {
+	width:40%;
+	margin:auto;
+}
+
+ul {
+	width:20px !important;
+}
