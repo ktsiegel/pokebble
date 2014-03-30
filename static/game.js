@@ -27,13 +27,6 @@ var handleResponse = function(response){
   var title = "", message = "";
   var result1 = response.round_result[0];
   var result2 = response.round_result[1];
-  if(response.outcome === "WON") {
-    Pebble.showSimpleNotificationOnPebble("You win!", "Congratulations!");
-    menu();
-  } else if(response.outcome === "LOST"){
-    Pebble.showSimpleNotificationOnPebble("You lost :(", "Better luck next time!");
-    menu();
-  } else {
     if(result1.pokemon1 !== ""){
       if(!result1.switch){
         title = result1.pokemon1 + " used " + result1.move;
@@ -52,7 +45,7 @@ var handleResponse = function(response){
 
           var attackTarget = (result1.trainer == trainerId) ? enemy : myParty[0];
           if(attackTarget.hp === 0){
-            message += "\n" + result1.pokemon2 + "fainted!";
+            message += "\n" + result1.pokemon2 + " fainted!";
           }
         }
       } else {
@@ -61,9 +54,8 @@ var handleResponse = function(response){
 
       Pebble.showSimpleNotificationOnPebble(title, message);
 
-      // setTimeout(function() {
-       title = "";
-       message = "";
+      title = "";
+      message = "";
 
         if(!result2.switch){
           title = result2.pokemon1 + " used " + result2.move;
@@ -82,7 +74,7 @@ var handleResponse = function(response){
 
             var attackTarget2 = (result2.trainer == trainerId) ? enemy : myParty[0];
             if(attackTarget2.hp === 0){
-              message += "\n" + result2.pokemon2 + "fainted!";
+              message += "\n" + result2.pokemon2 + " fainted!";
             }
           }
         } else {
@@ -90,8 +82,14 @@ var handleResponse = function(response){
         }
 
         Pebble.showSimpleNotificationOnPebble(title, message);
-      // }, 2000);
-    }
+
+        if(response.outcome === "WON") {
+          Pebble.showSimpleNotificationOnPebble("You win!", "Congratulations! You're a Pokemon Master!");
+          menu();
+        } else if(response.outcome === "LOST"){
+          Pebble.showSimpleNotificationOnPebble("You lost :(", "Better luck next time!");
+          menu();
+        }
   }
 
   simply.off('accelTap');
