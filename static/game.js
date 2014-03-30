@@ -1,205 +1,59 @@
 /* jshint esnext: true, sub: true*/
+/* global Pebble */
 
-var myParty = [
-    {
-        "id": "4",
-        "name": "Charmander",
-        "level": 100,
-        "hp": 0,
-        "maxhp": 159,
-        "moves": [
-            {
-                "name": "Scratch",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 40,
-                "type": "normal"
-            },
-            {
-                "name": "Ember",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 40,
-                "type": "fire"
-            },
-            {
-                "name": "Metal Claw",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 50,
-                "type": "steel"
-            }
-        ]
-    },
-    {
-        "id": "42",
-        "name": "Golbat",
-        "level": 100,
-        "hp": 240,
-        "maxhp": 240,
-        "moves": [
-            {
-                "name": "Poison Fang",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 50,
-                "type": "poison"
-            },
-            {
-                "name": "Bite",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 60,
-                "type": "dark"
-            },
-            {
-                "name": "Wing Attack",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 60,
-                "type": "flying"
-            },
-            {
-                "name": "Air Cutter",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 55,
-                "type": "flying"
-            }
-        ]
-    },
-    {
-        "id": "88",
-        "name": "Grimer",
-        "level": 100,
-        "hp": 180,
-        "maxhp": 180,
-        "moves": [
-            {
-                "name": "Pound",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 40,
-                "type": "normal"
-            },
-            {
-                "name": "Sludge",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 65,
-                "type": "poison"
-            }
-        ]
-    },
-    {
-        "id": "12",
-        "name": "Psyduck",
-        "level": 100,
-        "hp": 180,
-        "maxhp": 180,
-        "moves": [
-            {
-                "name": "Confusion",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 50,
-                "type": "psychic"
-            },
-            {
-                "name": "Gust",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 40,
-                "type": "flying"
-            },
-            {
-                "name": "Psybeam",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 65,
-                "type": "psychic"
-            },
-            {
-                "name": "Silver Wind",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 60,
-                "type": "bug"
-            }
-        ]
-    },
-    {
-        "id": "55",
-        "name": "Golduck",
-        "level": 100,
-        "hp": 264,
-        "maxhp": 264,
-        "moves": [
-            {
-                "name": "Scratch",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 40,
-                "type": "normal"
-            },
-            {
-                "name": "Confusion",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 50,
-                "type": "psychic"
-            },
-            {
-                "name": "Hydro Pump",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 120,
-                "type": "water"
-            }
-        ]
-    },
-    {
-        "id": "56",
-        "name": "Mankey",
-        "level": 100,
-        "hp": 135,
-        "maxhp": 135,
-        "moves": [
-            {
-                "name": "Scratch",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 40,
-                "type": "normal"
-            },
-            {
-                "name": "Low Kick",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 50,
-                "type": "fighting"
-            },
-            {
-                "name": "Karate Chop",
-                "pp": 20,
-                "maxpp": 20,
-                "power": 50,
-                "type": "fighting"
-            }
-        ]
-    }
-];
+var requests = require('requests.js');
 
-var enemy = {"id": "5",
-        "name": "Charmeleon",
-        "level": 100,
-        "hp": 0,
-        "maxhp": 159};
+var trainerId = Pebble.getAccountToken();
+var myParty = localStorage.getItem('party');
+var enemy;
 
 // Display stats for a pokemon
 // pokemon -> a standard pokemon hash
 var stats = function(pokemon) {
 
+};
+
+var handleResponse = function(response){
+  myParty = response.pokemon;
+  enemy = response.other_pokemon;
+
+  var title = "", message = "";
+
+  if(!response.round_result.switch){
+    title = response.round_result.pokemon + " used " + response.round_result.move;
+
+    if(response.round_result.missed){
+      message = response.round_result.pokemon + "'s attack missed!";
+    } else if(response.round_result.multiplier === 0) {
+      message = "It had no effect!";
+    } else{
+      if(response.round_result.multiplier > 1){
+        message = "It's super effective!\n";
+      } else if(response.round_result.multiplier < 1) {
+        message = "It's not very effective...\n";
+      }
+      message += response.round_result.target.name + " lost " + response.round_result.damage + "HP.";
+
+      var attackTarget = response.round_result.my_move ? myParty[0] : enemy;
+      if(attackTarget.hp === 0){
+        message += "\n" + attackTarget.name + "fainted!";
+      }
+    }
+  } else {
+    message = "Come back, " + response.round_result.pokemon1 + "!\nGo " + response.round_result.pokemon1;
+  }
+
+  Pebble.showSimpleNotificationOnPebble(title, message);
+
+  if(response.my_move){
+    if(myParty[0].hp === 0){
+      // TODO: force you to switch pokemon when your first one has fainted
+    } else {
+      // TODO: make you do something when it's your turn
+    }
+  } else {
+    // TODO: have some way to show that it's not your turn?
+  }
 };
 
 // Challenge screen
@@ -221,28 +75,27 @@ var challenge = function(pokemon, enemy) {
     }
     challengeState += moves[i]["name"] + "\n";
   }
-  
+
   simply.text({body: challengeState});
 
   // scrolling
-  var currentPointerLine = 5;
+  var currentPointerLine = 4;
   simply.text({ body: visibleBodyText(bodyText, currentPointerLine, 1) });
   simply.on('singleClick', function(e) {
-      if (e.button === 'up' && currentPointerLine > 5) {
+    if (e.button === 'up' && currentPointerLine > 4) {
       currentPointerLine -= 1;
-      } else if (e.button === 'down' && currentPointerLine < 4 + moves.length) {
+    } else if (e.button === 'down' && currentPointerLine < 3 + moves.length) {
         currentPointerLine += 1;
-      }
-      // Update body text
-      bodyText = partyScrollUpdate(bodyText, currentPointerLine);
-      simply.text({ body: visibleBodyText(bodyText, currentPointerLine, 1) });
+    }
+    // Update body text
+    bodyText = partyScrollUpdate(bodyText, currentPointerLine);
+    simply.text({ body: visibleBodyText(bodyText, currentPointerLine, 1) });
   });
 
   // Select move
   simply.on('longClick', function(e) {
     var move = bodyText.split('\n')[currentPointerLine];
-    // make move via request TODO
-    // ajax(opt, success = popup menu saying that you made that move, failure);
+    requests.postAttack(trainerId, currentPointerLine - 4, handleResponse, handleResponse);
   });
 };
 
@@ -376,8 +229,7 @@ var party = function(inBattle = False, enemy=[]) {
   simply.on('accelTap', function(e) {
     // Test if a fist bump: on x-axis
     if (e.axis === 'x') {
-      // ajax(opt, success, failure); -> request challenge start TODO
-      // don't forget to set enemy to a hash that includes the enemy's info
+      requests.postBattleStart(trainerId, myParty, handleResponse, handleResponse);
     }
   });
 };
@@ -390,8 +242,8 @@ var menu = function() {
   simply.vibe('short');
   simply.on('longClick', function(e) {
     simply.vibe('long');
-    // ajax(opt, success, failure); -> request game start TODO
-      party();
+    requests.postBattleStart(trainerId, myParty, handleResponse, handleResponse);
+    party();
   });
 };
 
