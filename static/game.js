@@ -49,6 +49,7 @@ var handleResponse = function(response){
           }
         }
       } else {
+        title = "Pokemon Switched!";
         message = "Come back, " + result1.pokemon1 + "!\nGo " + result1.pokemon1;
       }
 
@@ -78,15 +79,16 @@ var handleResponse = function(response){
             }
           }
         } else {
+          title = "Pokemon Switched!";
           message = "Come back, " + result2.pokemon1 + "!\nGo " + result2.pokemon1;
         }
 
         Pebble.showSimpleNotificationOnPebble(title, message);
 
-        if(response.outcome === "WON") {
+        if(response.outcome === "Won") {
           Pebble.showSimpleNotificationOnPebble("You win!", "Congratulations! You're a Pokemon Master!");
           menu();
-        } else if(response.outcome === "LOST"){
+        } else if(response.outcome === "Lost"){
           Pebble.showSimpleNotificationOnPebble("You lost :(", "Better luck next time!");
           menu();
         }
