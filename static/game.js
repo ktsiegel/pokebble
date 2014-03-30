@@ -30,12 +30,12 @@ var handleResponse = function(response){
 
   if(response.outcome === "Won") {
     console.log('you win');
-    Pebble.showSimpleNotificationOnPebble("You win!", "Congratulations! You're a Pokemon Master!");
     menu();
+    Pebble.showSimpleNotificationOnPebble("You win!", "Congratulations! You're a Pokemon Master!");
   } else if(response.outcome === "Lost"){
     console.log('you lose');
-    Pebble.showSimpleNotificationOnPebble("You lost...", "Better luck next time!");
     menu();
+    Pebble.showSimpleNotificationOnPebble("You lost...", "Better luck next time!");
   }
 
   if(result1.pokemon1 !== ""){
