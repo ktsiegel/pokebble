@@ -1,17 +1,21 @@
 /* jshint esnext: true, sub: true*/
 /* global Pebble */
 
+console.log("0 - game.js");
 var requests = require('requests.js');
-
+console.log("1 - game.js");
 var trainerId = Pebble.getAccountToken();
+console.log("2 - game.js");
 var myParty = localStorage.getItem('party');
+console.log("3 - game.js");
 var enemy;
+console.log("4 - game.js");
 
 // Display stats for a pokemon
 // pokemon -> a standard pokemon hash
-var stats = function(pokemon) {
+// var stats = function(pokemon) {
 
-};
+// }
 
 var handleResponse = function(response){
   myParty = response.pokemon;
@@ -55,6 +59,8 @@ var handleResponse = function(response){
     // TODO: have some way to show that it's not your turn?
   }
 };
+
+console.log("5 - game.js");
 
 // Challenge screen
 var challenge = function(pokemon) {
@@ -105,6 +111,8 @@ var challenge = function(pokemon) {
   });
 };
 
+console.log("6 - game.js");
+
 // Helper method that updates text to reflect scrolling
 // through a list of Pokemon in a trainer's party
 //
@@ -147,6 +155,8 @@ var visibleBodyText = function(text, currLineNumber, offset=0) {
 
   return text.split('\n').slice(start,end).join('\n');
 };
+
+console.log("6 - game.js");
 
 // Screen depicts list of Pokemon in your party
 // Scroll through list with up and down buttons, and long hold to select
@@ -240,9 +250,11 @@ var party = function(inBattle = false) {
   });
 };
 
+console.log("7 - game.js");
 
 // The welcome menu
 var menu = function() {
+  console.log("9 - game.js");
   simply.title('Welcome to Pokebble!');
   simply.subtitle('Long hold the center button to play.');
   simply.vibe('short');
@@ -253,4 +265,5 @@ var menu = function() {
   });
 };
 
+console.log("8 - game.js");
 menu();
