@@ -149,7 +149,7 @@ var challenge = function (fightPokemon) {
   // Select move
   simply.off('longClick');
   simply.on('longClick', function(e) {
-    console.log("long-click fired in battle: " + currentPointerLine.toString + "/" + challengeState.split('\n').length.toString());
+    console.log("long-click fired in battle: " + currentPointerLine.toString() + "/" + challengeState.split('\n').length.toString());
     if (currentPointerLine < challengeState.split('\n').length - 1) {
       var move = challengeState.split('\n')[currentPointerLine];
       requests.postAttack(trainerId, currentPointerLine - 4, handleResponse, handleResponse);
