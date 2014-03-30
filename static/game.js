@@ -43,7 +43,7 @@ var handleResponse = function(response){
       if(!result2.switch){
         title = result2.pokemon1 + " used " + result2.move;
 
-        if(result2.missed){
+        if(result2.miss){
           message = result2.pokemon1 + "'s attack missed!";
         } else if(result2.multiplier === 0) {
           message = "It had no effect!";
@@ -74,7 +74,7 @@ var handleResponse = function(response){
 
       title = result1.pokemon1 + " used " + result1.move;
 
-      if(result1.missed){
+      if(result1.miss){
         message = result1.pokemon1 + "'s attack missed!";
       } else if(result1.multiplier === 0) {
         message = "It had no effect!";
