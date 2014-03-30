@@ -81,10 +81,20 @@ $(document).on("ready", function(){
             if (result1.switch) { // switch
                 if (result1.trainer == trainer) { // my turn
                     var my_pokemon = data.pokemon[0];
-                    changeTrainerPokemon(my_pokemon.name, my_pokemon.hp, my_pokemon.maxhp, my_pokemon.level);
+                    if (!result2.switch && result2.pokemon != ""){
+                        var hp = my_pokemon.hp + result2.dmg
+                        changeTrainerPokemon(my_pokemon.name, hp, my_pokemon.maxhp, my_pokemon.level);
+                    } else {
+                        changeTrainerPokemon(my_pokemon.name, my_pokemon.hp, my_pokemon.maxhp, my_pokemon.level);
+                    }
                 } else { // their turn
                     var opp_pokemon = data.other_pokemon;
-                    changeOpponentPokemon(opp_pokemon.name, opp_pokemon.hp, opp_pokemon.maxhp, opp_pokemon.level);
+                    if (!result2.switch && result2.pokemon != ""){
+                        var hp = opp_pokemon.hp + result2.dmg
+                        changeOpponentPokemon(opp_pokemon.name, hp, opp_pokemon.maxhp, opp_pokemon.level);
+                    } else {
+                        changeOpponentPokemon(opp_pokemon.name, opp_pokemon.hp, opp_pokemon.maxhp, opp_pokemon.level);
+                    }
                 }
             } else { // attack
                 if (result1.trainer == trainer) { // my turn
