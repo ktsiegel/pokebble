@@ -317,14 +317,6 @@ var party = function(inBattle) {
       // stats
     //}
   });
-
-  simply.off('accelTap');
-  simply.on('accelTap', function(e) {
-    // Test if a fist bump: on x-axis
-    if (e.axis === 'x') {
-      requests.postBattleStart(trainerId, myParty, handleResponse, handleResponse);
-    }
-  });
 };
 
 console.log("7 - game.js");
@@ -341,6 +333,13 @@ var menu = function() {
     console.log("12 - game.js");
     requests.postBattleStart(trainerId, myParty, handleResponse, handleResponse);
     console.log("13 - game.js");
+  });
+  simply.off('accelTap');
+  simply.on('accelTap', function(e) {
+    // Test if a fist bump: on x-axis
+    if (e.axis === 'x') {
+      requests.postBattleStart(trainerId, myParty, handleResponse, handleResponse);
+    }
   });
 };
 
