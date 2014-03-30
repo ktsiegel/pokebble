@@ -136,7 +136,7 @@ var partyScrollUpdate = function(text, currLineNumber) {
 //
 // param text -> the entirety of the Pebble text
 // param currLineNumber -> the line that should be centered on the screen
-var visibleBodyText = function(text, currLineNumber, offset=0) {
+var visibleBodyText = function(text, currLineNumber, offset) {
   var maxLine = text.split('\n').length;
 
   // Applicable if currLineNumber <= 3
@@ -201,7 +201,7 @@ var party = function(inBattle = false) {
 
   // Scroll through Pokemon list
   var currentPointerLine = 1; // tracks where the pokemon selector (">") is
-  simply.text({ body: visibleBodyText(bodyText, currentPointerLine) });
+  simply.text({ body: visibleBodyText(bodyText, currentPointerLine, 0) });
   simply.on('singleClick', function(e) {
       if (e.button === 'up') {
         // Can only scroll among pokemon, so handle skipping the blank line
@@ -226,7 +226,7 @@ var party = function(inBattle = false) {
       }
       // Update body text
       bodyText = partyScrollUpdate(bodyText, currentPointerLine);
-      simply.text({ body: visibleBodyText(bodyText, currentPointerLine) });
+      simply.text({ body: visibleBodyText(bodyText, currentPointerLine, 0) });
   });
 
   // Select pokemon
