@@ -21,6 +21,8 @@ var handleResponse = function(response){
   myParty = response.pokemon;
   enemy = response.other_pokemon;
 
+  console.log("handling response...");
+
   var title = "", message = "";
 
   if(!response.round_result.switch){
@@ -49,14 +51,8 @@ var handleResponse = function(response){
 
   Pebble.showSimpleNotificationOnPebble(title, message);
 
-  if(response.my_move){
-    if(myParty[0].hp === 0){
-      party(true);
-    } else {
-      // TODO: make you do something when it's your turn
-    }
-  } else {
-    // TODO: have some way to show that it's not your turn?
+  if(response.my_move && myParty[0].hp === 0){
+    party(true);
   }
 };
 
@@ -99,12 +95,13 @@ var challenge = function(pokemon) {
 
   // Select move
   simply.on('longClick', function(e) {
-
-    if (currentPointerLine < challengeState.split('\n').length - 1) {
-      var move = challengeState.split('\n')[currentPointerLine];
-      requests.postAttack(trainerId, currentPointerLine - 4, handleResponse, handleResponse);
-    } else { // switch pokemon
-      party(true);
+    if (response.my_move) {
+      if (currentPointerLine < challengeState.split('\n').length - 1) {
+        var move = challengeState.split('\n')[currentPointerLine];
+        requests.postAttack(trainerId, currentPointerLine - 4, handleResponse, handleResponse);
+      } else { // switch pokemon
+        party(true);
+      }
     }
   });
 };
@@ -242,7 +239,7 @@ var party = function(inBattle) {
     }
     else {
       // change to stat screen of that pokemon
-      stats(pokemon);
+      // stats
     }
   });
 
@@ -268,7 +265,6 @@ var menu = function() {
     console.log("12 - game.js");
     requests.postBattleStart(trainerId, myParty, handleResponse, handleResponse);
     console.log("13 - game.js");
-    party(false);
   });
 };
 
