@@ -58,6 +58,7 @@ var handleResponse = function(response){
       title = "";
       message = "";
 
+      if(result2.pokemon1 !== ""){
         if(!result2.switch){
           title = result2.pokemon1 + " used " + result2.move;
 
@@ -84,14 +85,15 @@ var handleResponse = function(response){
         }
 
         Pebble.showSimpleNotificationOnPebble(title, message);
+      }
 
-        if(response.outcome === "Won") {
-          Pebble.showSimpleNotificationOnPebble("You win!", "Congratulations! You're a Pokemon Master!");
-          menu();
-        } else if(response.outcome === "Lost"){
-          Pebble.showSimpleNotificationOnPebble("You lost :(", "Better luck next time!");
-          menu();
-        }
+      if(response.outcome === "Won") {
+        Pebble.showSimpleNotificationOnPebble("You win!", "Congratulations! You're a Pokemon Master!");
+        menu();
+      } else if(response.outcome === "Lost"){
+        Pebble.showSimpleNotificationOnPebble("You lost :(", "Better luck next time!");
+        menu();
+      }
   }
 
   simply.off('accelTap');
