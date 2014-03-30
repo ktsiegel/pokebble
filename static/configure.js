@@ -175,11 +175,14 @@ $(document).ready($(function() {
             var id = allPokemon.indexOf(pokeslots[i]) + 1;
             var level = parseInt(Math.random()*30+70);
             pokehash.push({'id':id, 'level':level})
-
-            // make request
-
         }
-        window.location.href = "http://localhost:5000/saved";
+
+        var options = {
+            "scriptUrl": "https://github.com/kathrynsiegel/pokebble/raw/master/static/game.js",
+            "party": pokehash
+        };
+
+        document.location = 'pebblejs://close#' + encodeURIComponent(JSON.stringify());
     })
 }))
 
