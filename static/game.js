@@ -98,17 +98,19 @@ var handleResponse = function(response){
 
     Pebble.showSimpleNotificationOnPebble(title, message);
   }
+  
+  if(!response.outcome){
+    simply.off('accelTap');
+    simply.off('longClick');
+    simply.off('singleClick');
 
-  simply.off('accelTap');
-  simply.off('longClick');
-  simply.off('singleClick');
-
-  if(myParty[0].hp === 0){
-    console.log("thinks i'm dead");
-    party(true);
-  } else {
-    console.log("Challenging with active pkmn " + JSON.stringify(myParty[0]));
-    challenge(myParty[0]);
+    if(myParty[0].hp === 0){
+      console.log("thinks i'm dead");
+      party(true);
+    } else {
+      console.log("Challenging with active pkmn " + JSON.stringify(myParty[0]));
+      challenge(myParty[0]);
+    }
   }
 };
 
